@@ -1,0 +1,109 @@
+name: tarhanaciyasarmobil
+description: "Tarhanacı Yaşar"
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+#----------------------PACKAGES------------------------#
+dependencies:
+  flutter:
+    sdk: flutter
+
+  #Utility Packages
+  http: ^1.2.2
+  intl: ^0.20.1
+  logger: ^2.5.0
+  url_launcher: ^6.3.1
+
+  #Icons
+  cupertino_icons: ^1.0.6
+  iconsax: ^0.0.8
+  get: ^4.6.6
+  get_storage: ^2.1.1
+  flutter_native_splash: ^2.4.1
+  smooth_page_indicator: ^1.2.0+3
+  carousel_slider: ^5.0.0
+  readmore: ^3.0.0
+  firebase_core: ^3.10.1
+  lottie: ^2.0.0
+  connectivity_plus: ^5.0.1
+  firebase_auth: ^5.4.2
+  cloud_firestore: ^5.6.3
+  google_sign_in: ^6.2.2
+  shimmer: ^3.0.0
+  cached_network_image: ^3.4.1
+  firebase_storage: ^12.4.2
+  image_picker: ^1.1.2
+
+# State Management
+
+get: ^4.6.5
+
+
+
+
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+
+
+
+
+  flutter_lints: ^3.0.0
+
+flutter:
+
+  uses-material-design: true
+
+
+  assets:
+    - assets/images/
+    - assets/logos/
+    - assets/images/onboarding/
+    - assets/icons/
+    - assets/images/banners/
+    - assets/images/products/
+
+
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets\fonts\Poppins-Bold.ttf
+          weight: 800
+        - asset: assets\fonts\Poppins-BoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets\fonts\Poppins-Italic.ttf
+          style: italic
+        - asset: assets\fonts\Poppins-Light.ttf
+          weight: 300
+        - asset: assets\fonts\Poppins-LightItalic.ttf
+          weight: 300
+          style: italic
+        - asset: assets\fonts\Poppins-Medium.ttf
+          weight: 500
+        - asset: assets\fonts\Poppins-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets\fonts\Poppins-Regular.ttf
+          weight: 400
+        - asset: assets\fonts\Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets\fonts\Poppins-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+
+
+
+
+
