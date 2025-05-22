@@ -9,10 +9,10 @@ class CustomElevatedButtonTheme {
       style: ElevatedButton.styleFrom(
           elevation: 0,
           foregroundColor: ProjectColors.whiteColor,
-          backgroundColor: ProjectColors.blueColor,
+          backgroundColor: ProjectColors.greenColor,
           disabledForegroundColor: ProjectColors.grayColor,
           disabledBackgroundColor: ProjectColors.grayColor,
-          side: const BorderSide(color: ProjectColors.blueColor),
+          side: const BorderSide(color: ProjectColors.greenColor),
           padding: EdgeInsets.symmetric(
               vertical: ProjectPadding.pagePadding.value()),
           textStyle: const TextStyle(
@@ -30,7 +30,7 @@ class CustomElevatedButtonTheme {
           backgroundColor: ProjectColors.blueColor,
           disabledForegroundColor: ProjectColors.grayColor,
           disabledBackgroundColor: ProjectColors.grayColor,
-          side: const BorderSide(color: ProjectColors.blueColor),
+          side: const BorderSide(color: ProjectColors.grayColor),
           padding: EdgeInsets.symmetric(
               vertical: ProjectPadding.pagePadding.value()),
           textStyle: const TextStyle(

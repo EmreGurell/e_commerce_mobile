@@ -1,26 +1,44 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/loaders/loaders.dart';
 import 'package:tarhanaciyasarmobil/data/repositories/products/product_repository.dart';
 import 'package:tarhanaciyasarmobil/features/shop/models/product_model.dart';
+import 'package:tarhanaciyasarmobil/features/shop/models/product_variation_model.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/enums.dart';
-import 'package:get/get.dart';
 
 class ProductController extends GetxController {
   static ProductController get instance => Get.find();
+
   final isLoading = false.obs;
+  final isFetchingMore = false.obs;
   RxList<ProductModel> featuredProducts = <ProductModel>[].obs;
+  RxList<ProductModel> allProducts = <ProductModel>[].obs;
   final productRepo = Get.put(ProductRepository());
+
+  // Lazy load için:
+  DocumentSnapshot? lastProductDoc;
+  final int limit = 10;
+  bool hasMoreProducts = true;
+
+  // Seçili varyasyon
+  Rx<ProductVariationModel> selectedVariation =
+      ProductVariationModel.empty().obs;
+
   @override
   void onInit() {
-    fetchFeaturedProducts(); // Ürünleri yükle
-
+    fetchFeaturedProducts();
+    fetchProductsPaginated();
     super.onInit();
+  }
+
+  void setSelectedVariation(ProductVariationModel variation) {
+    selectedVariation.value = variation;
   }
 
   Future<void> fetchFeaturedProducts() async {
     try {
       isLoading.value = true;
       final products = await productRepo.getFeaturedProducts();
-
       featuredProducts.assignAll(products);
     } catch (e) {
       Loaders.errorSnackBar(title: 'Hay Aksi', message: e.toString());
@@ -36,6 +54,33 @@ class ProductController extends GetxController {
     } catch (e) {
       Loaders.errorSnackBar(title: 'Hay Aksi', message: e.toString());
       return [];
+    }
+  }
+
+  Future<void> fetchProductsPaginated() async {
+    if (isFetchingMore.value || !hasMoreProducts) return;
+
+    try {
+      isFetchingMore.value = true;
+
+      final paginatedProducts = await productRepo.getProductsPaginated(
+        lastDocument: lastProductDoc,
+        limit: limit,
+        searchText: null, // İstersen arama metnini buradan geçebilirsin
+      );
+
+      if (paginatedProducts.products.isNotEmpty) {
+        allProducts.addAll(paginatedProducts.products);
+        lastProductDoc = paginatedProducts.lastDocument;
+      }
+
+      if (paginatedProducts.products.length < limit) {
+        hasMoreProducts = false;
+      }
+    } catch (e) {
+      Loaders.errorSnackBar(title: 'Hay Aksi', message: e.toString());
+    } finally {
+      isFetchingMore.value = false;
     }
   }
 
@@ -61,7 +106,7 @@ class ProductController extends GetxController {
       if (smallestPrice.isEqual(largestPrice)) {
         return largestPrice.toString();
       } else {
-        return '$smallestPrice - \$$largestPrice';
+        return '$smallestPrice - $largestPrice';
       }
     }
   }

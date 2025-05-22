@@ -1,6 +1,5 @@
 import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
-import 'package:tarhanaciyasarmobil/utils/helpers/helper_fuctions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -25,15 +24,23 @@ class Loaders {
 
   static customToast({required message}) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
+        duration: Duration(milliseconds: 1000),
+        showCloseIcon: true,
+        backgroundColor: ProjectColors.grayColor,
         content: Container(
-      padding: const EdgeInsets.all(ProjectSizes.md),
-      margin: const EdgeInsets.symmetric(horizontal: 30),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: HelperFuctions.isDarkMode(Get.context!)
-              ? ProjectColors.grayColor.withOpacity(.9)
-              : ProjectColors.gray4Color.withOpacity(.9)),
-    )));
+          padding: const EdgeInsets.symmetric(vertical: ProjectSizes.small),
+          margin: const EdgeInsets.symmetric(horizontal: 0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Text(
+            message,
+            style: Theme.of(Get.context!)
+                .textTheme
+                .titleLarge!
+                .apply(color: ProjectColors.whiteColor),
+          ),
+        )));
   }
 
   static void successSnackBar({
@@ -47,7 +54,7 @@ class Loaders {
       isDismissible: true,
       shouldIconPulse: true,
       colorText: ProjectColors.whiteColor,
-      backgroundColor: ProjectColors.greenColor, // Başarı için yeşil renk
+      backgroundColor: ProjectColors.green2Color, // Başarı için yeşil renk
       snackPosition: SnackPosition.BOTTOM,
       duration: Duration(seconds: duration),
       margin: const EdgeInsets.all(10),

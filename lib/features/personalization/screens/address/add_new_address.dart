@@ -68,6 +68,7 @@ class ContactInfo extends StatelessWidget {
         const Divider(),
         const SizedBox(height: ProjectSizes.spaceBtwItems),
         TextFormField(
+          textInputAction: TextInputAction.next,
           validator: (value) => Validator.validateEmptyText('Ad', value),
           controller: controller.name,
           decoration: const InputDecoration(
@@ -76,10 +77,12 @@ class ContactInfo extends StatelessWidget {
         ),
         const SizedBox(height: ProjectSizes.spaceBtwItems),
         TextFormField(
+          textInputAction: TextInputAction.next,
           validator: (value) => Validator.validatePhoneNumber(value),
           controller: controller.phoneNumber,
           keyboardType: TextInputType.phone,
           decoration: const InputDecoration(
+              hintText: ProjectTexts.phoneNumberHint,
               prefixIcon: Icon(Iconsax.mobile),
               labelText: ProjectTexts.phoneNumber),
         ),
@@ -109,6 +112,7 @@ class AddressInfo extends StatelessWidget {
           children: [
             Expanded(
               child: TextFormField(
+                textInputAction: TextInputAction.next,
                 validator: (value) => Validator.validateEmptyText('İl', value),
                 controller: controller.city,
                 decoration: const InputDecoration(
@@ -119,6 +123,7 @@ class AddressInfo extends StatelessWidget {
             const SizedBox(width: ProjectSizes.spaceBtwItems),
             Expanded(
               child: TextFormField(
+                textInputAction: TextInputAction.next,
                 validator: (value) =>
                     Validator.validateEmptyText('ilçe', value),
                 controller: controller.district,
@@ -136,6 +141,8 @@ class AddressInfo extends StatelessWidget {
           children: [
             Expanded(
               child: TextFormField(
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.next,
                 validator: (value) =>
                     Validator.validateEmptyText('Posta Kodu', value),
                 controller: controller.postalCode,
@@ -147,6 +154,7 @@ class AddressInfo extends StatelessWidget {
             const SizedBox(width: ProjectSizes.spaceBtwItems),
             Expanded(
               child: TextFormField(
+                textInputAction: TextInputAction.next,
                 validator: (value) =>
                     Validator.validateEmptyText('Mahalle', value),
                 controller: controller.neighbourhood,

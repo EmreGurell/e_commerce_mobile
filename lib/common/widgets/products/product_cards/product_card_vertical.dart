@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:tarhanaciyasarmobil/common/widgets/products/favourite_icon/favourite_icon.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/products/product_cards/widget/add_to_cart_button.dart';
-import 'package:tarhanaciyasarmobil/features/shop/controllers/product/product_controller.dart';
+import 'package:tarhanaciyasarmobil/common/widgets/texts/product_brand_text.dart';
+import 'package:tarhanaciyasarmobil/common/widgets/texts/product_price_text.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 
 import 'package:tarhanaciyasarmobil/common/widgets/images/rounded_image.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/texts/product_title_text.dart';
@@ -20,14 +20,23 @@ class ProductCardVertical extends StatelessWidget {
     Key? key,
     required this.product,
   }) : super(key: key);
+
   final ProductModel product;
+
   @override
   Widget build(BuildContext context) {
-    final controller = ProductController.instance;
-    final salePercentage =
-        controller.calculateSalePercentage(product.price, product.salePrice);
-
     final isDark = HelperFuctions.isDarkMode(context);
+
+    // Varyasyonlu ürünlerde lowestPriceWithOriginal extension'ını kullanıyoruz
+    final priceInfo = product.lowestPriceWithOriginal;
+
+    // Eğer extension null dönerse fallback için direkt product.price ve salePrice kullanalım
+    final double displayPrice = priceInfo != null && priceInfo['salePrice']! > 0
+        ? priceInfo['salePrice']!
+        : (priceInfo != null ? priceInfo['price']! : product.price);
+
+    final double originalPrice =
+        priceInfo != null ? priceInfo['price']! : product.price;
 
     return GestureDetector(
       onTap: () => Get.to(ProductDetailScreen(product: product)),
@@ -40,65 +49,79 @@ class ProductCardVertical extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Ürün görseli
+            // Görsel ve favori ikonu
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(ProjectSizes.imageAndCardRadius),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(ProjectSizes.imageAndCardRadius),
+                    topRight: Radius.circular(ProjectSizes.imageAndCardRadius),
+                  ),
                   child: RoundedImage(
+                    applyImageRadius: false,
+                    borderRadius: ProjectSizes.imageAndCardRadius,
                     isNetworkImage: true,
                     imageUrl: product.thumbnail,
                     width: double.infinity,
-                    height: 200,
+                    height: 175,
                     fit: BoxFit.cover,
                   ),
                 ),
-                // İstek listesine ekleme butonu (Kalp ikonu)
                 Positioned(
-                  top: 8,
-                  right: 8,
-                  child: FavouriteIcon(
-                    productId: product.id,
-                  ),
+                  top: 5,
+                  right: 5,
+                  child: FavouriteIcon(productId: product.id),
                 ),
               ],
             ),
             const SizedBox(height: ProjectSizes.small),
+
             // Ürün başlığı
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: ProjectSizes.small),
               child: ProductTitleText(
-                title: product.title,
-                maxLines: 2,
+                smallSize: true,
+                title: product.title.toUpperCase(),
+                maxLines: 1,
                 textAlign: TextAlign.left,
               ),
             ),
             const SizedBox(height: ProjectSizes.small / 2),
-            // Fiyat ve Sepete Ekle Butonu
-            Flexible(
-              child: Column(
+
+            // Marka
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: ProjectSizes.small),
+              child: ProductBrandText(
+                title: product.brand?.name ?? '',
+                maxLines: 1,
+                textAlign: TextAlign.left,
+              ),
+            ),
+            const SizedBox(height: ProjectSizes.spaceBtwItems * 0.8),
+
+            // Fiyat ve sepete ekle
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: ProjectSizes.small),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (product.productType == ProductType.single.toString() &&
-                      product.salePrice > 0)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: ProjectSizes.small),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(product.price.toString(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
-                                  .apply(
-                                      decoration: TextDecoration.lineThrough)),
-                          AddToCartButton(
-                            product: product,
-                          ),
-                        ],
-                      ),
+                  ProductPriceText(
+                    price: originalPrice,
+                    salePrice: displayPrice,
+                    maxLines: 1,
+                    isLarge: true,
+                  ),
+                  // Sadece single ürünlerde sepete ekle butonu göster
+                  if (product.productType == ProductType.single.toString())
+                    AddToCartButton(product: product)
+                  else
+                    IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios, size: 18),
+                      onPressed: () =>
+                          Get.to(ProductDetailScreen(product: product)),
                     ),
                 ],
               ),

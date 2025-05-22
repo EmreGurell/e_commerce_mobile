@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/login_signup_widgets/custom_divider.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/login_signup_widgets/social_media_buttons.dart';
 import 'package:tarhanaciyasarmobil/features/authentication/screens/signup/widgets/signup_form.dart';
@@ -12,22 +13,22 @@ class SignupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(ProjectSizes.pagePadding),
+          padding: const EdgeInsets.all(ProjectSizes.pagePadding),
           child: Column(
             children: [
-              SignupTitle(),
-              SizedBox(height: ProjectSizes.spaceBtwItems * 2),
-              SignupForm(),
-              SizedBox(
+              const SignupTitle(),
+              const SizedBox(height: ProjectSizes.spaceBtwItems * 2),
+              const SignupForm(),
+              const SizedBox(
                 height: ProjectSizes.spaceBtwItems * 2,
               ),
-              CustomDivider(),
-              SizedBox(
+              CustomDivider(text: ProjectTexts.orSignInWith.capitalize!),
+              const SizedBox(
                 height: ProjectSizes.spaceBtwItems * 2,
               ),
-              SocialMediaButtons()
+              const SocialMediaButtons()
             ],
           ),
         ),

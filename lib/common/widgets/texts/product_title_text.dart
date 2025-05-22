@@ -17,8 +17,11 @@ class ProductTitleText extends StatelessWidget {
     return Text(
       title,
       style: smallSize
-          ? Theme.of(context).textTheme.labelLarge
-          : Theme.of(context).textTheme.titleMedium,
+          ? Theme.of(context).textTheme.bodyLarge
+          : Theme.of(context)
+              .textTheme
+              .titleLarge!
+              .copyWith(fontFamily: 'Poppins'),
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines,
       textAlign: textAlign,

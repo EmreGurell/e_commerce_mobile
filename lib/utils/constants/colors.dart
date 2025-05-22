@@ -45,8 +45,8 @@ class ProjectColors {
 
   //Green
   static const Color green3Color = Color(0xff96FFE1);
-  static const Color green2Color = Color(0xff2EFFC3);
-  static const Color greenColor = Color(0xff00C48C);
+  static const Color greenColor = Color(0xff366059);
+  static const Color green2Color = Color(0XFF4ea062);
 
   //--------------------------------------------------------------------------//
 
@@ -114,4 +114,6 @@ class ProjectColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+
+  static const Color scaffoldLight = Color.fromARGB(255, 241, 241, 241);
 }

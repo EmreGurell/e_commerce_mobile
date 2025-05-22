@@ -41,12 +41,12 @@ class CloudHelperFunctions {
 
     if (snapshot.hasError) {
       if (error != null) return error;
-      return const Center(child: Text('Something went wrong.'));
+      return const Center(child: Text('Bir şeyler ters gitti :/'));
     }
 
     if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty) {
       if (nothingFound != null) return nothingFound;
-      return const Center(child: Text('No Data Found!'));
+      return const Center(child: Text(''));
     }
 
     return null;

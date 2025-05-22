@@ -29,13 +29,16 @@ class LoginController extends GetxController {
   Future<void> emailAndPasswordSignIn() async {
     try {
       // Show loading dialog
-      FullScreenLoader.openLoadingDialog("Giriş Yapılıyor...", ImagePaths.docerAnimation);
+      FullScreenLoader.openLoadingDialog(
+          "Giriş Yapılıyor...", ImagePaths.docerAnimation);
 
       // Check Internet Connectivity
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected) {
         FullScreenLoader.stopLoading();
-        Loaders.errorSnackBar(title: 'No Connection', message: 'Please check your internet connection.');
+        Loaders.errorSnackBar(
+            title: 'Bağlantı Yok',
+            message: 'Lütfen internet bağlantınızı kontrol edin.');
         return;
       }
 
@@ -52,7 +55,7 @@ class LoginController extends GetxController {
       }
 
       // Attempt login with Firebase Authentication
-      final userCredential = await AuthenticationRepository.instance
+      await AuthenticationRepository.instance
           .loginWithEmailAndPassword(email.text.trim(), password.text.trim());
 
       FullScreenLoader.stopLoading();
@@ -61,24 +64,30 @@ class LoginController extends GetxController {
       AuthenticationRepository.instance.screenRedirect();
     } catch (e) {
       FullScreenLoader.stopLoading();
-      Loaders.errorSnackBar(title: 'Hay aksi', message: 'Giriş işlemi sırasında bir hata oluştu. ${e.toString()}');
+      Loaders.errorSnackBar(
+          title: 'Hay aksi',
+          message: 'Giriş işlemi sırasında bir hata oluştu. ${e.toString()}');
     }
   }
 
   Future<void> googleSignIn() async {
     try {
       // Show loading dialog
-      FullScreenLoader.openLoadingDialog('Giriş Yapılıyor...', ImagePaths.docerAnimation);
+      FullScreenLoader.openLoadingDialog(
+          'Giriş Yapılıyor...', ImagePaths.docerAnimation);
 
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected) {
         FullScreenLoader.stopLoading();
-        Loaders.errorSnackBar(title: 'No Connection', message: 'Please check your internet connection.');
+        Loaders.errorSnackBar(
+            title: 'Bağlantı Yok',
+            message: 'Lütfen internet bağlantınızı kontrol edin.');
         return;
       }
 
       // Attempt Google Sign-In
-      final userCredentials = await AuthenticationRepository.instance.signInWithGoogle();
+      final userCredentials =
+          await AuthenticationRepository.instance.signInWithGoogle();
 
       // Save user data
       await userController.saveUserRecord(userCredentials);
@@ -89,7 +98,10 @@ class LoginController extends GetxController {
       AuthenticationRepository.instance.screenRedirect();
     } catch (e) {
       FullScreenLoader.stopLoading();
-      Loaders.errorSnackBar(title: 'Hay aksi', message: 'Google ile giriş sırasında bir hata oluştu. ${e.toString()}');
+      Loaders.errorSnackBar(
+          title: 'Hay aksi',
+          message:
+              'Google ile giriş sırasında bir hata oluştu. ${e.toString()}');
     }
   }
 }

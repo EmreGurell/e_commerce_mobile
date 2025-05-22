@@ -23,7 +23,7 @@ class FullScreenLoader {
                   AnimationLoaderWidget(
                     text: text,
                     animation: animation,
-                    showAction: true,
+                    showAction: false,
                   )
                 ],
               ),

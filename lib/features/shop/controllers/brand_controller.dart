@@ -53,8 +53,23 @@ class BrandController extends GetxController {
           .getProductsForBrand(limit: limit, brandId: brandId);
       return products;
     } catch (e) {
+
       Loaders.errorSnackBar(title: 'Hay Aksi', message: e.toString());
       return [];
     }
   }
+
+  Future<int> calculateProductCount(String brandId) async {
+    try {
+      isLoading.value = true;
+      final count = await brandRepository.getProductCountForBrand(brandId);
+      return count;
+    } catch (e) {
+      Loaders.errorSnackBar(title: 'Hay Aksi', message: e.toString());
+      return 0;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 }

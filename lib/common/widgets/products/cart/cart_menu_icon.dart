@@ -8,14 +8,16 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class ShoppingCartCounter extends StatelessWidget {
-  const ShoppingCartCounter({super.key, this.iconColor});
-  final Color? iconColor;
+  const ShoppingCartCounter(
+      {super.key, this.iconColor, this.backgroundColor = Colors.transparent});
+  final Color? iconColor, backgroundColor;
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(CartController());
     Get.put(VariationController());
     return Stack(children: [
       IconButton(
+          style: IconButton.styleFrom(backgroundColor: backgroundColor),
           onPressed: () => Get.to(() => const CartScreen()),
           icon: Icon(
             Iconsax.shopping_cart,
@@ -24,8 +26,8 @@ class ShoppingCartCounter extends StatelessWidget {
       Positioned(
         right: 0,
         child: Container(
-          width: ProjectSizes.IconS * 1.2,
-          height: ProjectSizes.IconS * 1.2,
+          width: ProjectSizes.IconS * 1.3,
+          height: ProjectSizes.IconS * 1.3,
           decoration: BoxDecoration(
               color: ProjectColors.redColor,
               borderRadius: BorderRadius.circular(100)),

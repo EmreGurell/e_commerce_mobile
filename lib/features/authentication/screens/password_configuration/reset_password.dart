@@ -1,5 +1,5 @@
 import 'package:tarhanaciyasarmobil/features/authentication/screens/login/login.dart';
-import 'package:tarhanaciyasarmobil/features/controllers/forget_password/forget_password_controller.dart';
+import 'package:tarhanaciyasarmobil/features/authentication/controllers/forget_password/forget_password_controller.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/texts.dart';
 import 'package:tarhanaciyasarmobil/utils/helpers/helper_fuctions.dart';

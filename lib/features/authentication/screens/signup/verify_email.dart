@@ -1,5 +1,6 @@
+import 'package:lottie/lottie.dart';
 import 'package:tarhanaciyasarmobil/data/repositories/authentication/authentication_repository.dart';
-import 'package:tarhanaciyasarmobil/features/controllers/signup/verify_email_controller.dart';
+import 'package:tarhanaciyasarmobil/features/authentication/controllers/signup/verify_email_controller.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/image_paths.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/texts.dart';
@@ -30,8 +31,8 @@ class VerifyEmailScreen extends StatelessWidget {
           child: Column(
             children: [
               //Image
-              Image(
-                image: AssetImage(ImagePaths.deliveredEmail),
+              Lottie.asset(ImagePaths.deliveredEmail,
+
                 width: HelperFuctions.screenWidth(context) * .6,
               ),
               const SizedBox(
@@ -51,10 +52,10 @@ class VerifyEmailScreen extends StatelessWidget {
               const SizedBox(
                 height: ProjectSizes.spaceBtwItems,
               ),
-              Text(ProjectTexts.confirmEmailSubtitle,
+              Text(ProjectTexts.confirmEmailSubtitle, textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodySmall),
               const SizedBox(
-                height: ProjectSizes.spaceBtwItems,
+                height: ProjectSizes.spaceBtwItems*3,
               ),
 
               //Buttons

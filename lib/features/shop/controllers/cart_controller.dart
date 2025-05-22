@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:tarhanaciyasarmobil/common/widgets/dialogs/dialogs.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/loaders/loaders.dart';
 import 'package:tarhanaciyasarmobil/features/shop/controllers/product/variation_controller.dart';
 import 'package:tarhanaciyasarmobil/features/shop/models/cart_item_model.dart';
 import 'package:tarhanaciyasarmobil/features/shop/models/product_model.dart';
+import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/enums.dart';
 import 'package:tarhanaciyasarmobil/utils/local_storage/storage_utility.dart';
 import 'package:get/get.dart';
@@ -31,7 +35,7 @@ class CartController extends GetxController {
     updateCart();
   }
 
-  void removeOneFromCart(CartItemModel item) {
+  void removeOneFromCart(CartItemModel item, BuildContext context) {
     int index = cartItems.indexWhere((cartItem) =>
         cartItem.productId == item.productId &&
         cartItem.variationId == item.variationId);
@@ -42,7 +46,7 @@ class CartController extends GetxController {
       } else {
         // Öğeyi tamamen kaldırmadan önce bir onay diyaloğu göster
         cartItems[index].quantity == 1
-            ? removeFromCartDialog(index)
+            ? removeFromCartDialog(index, context)
             : cartItems.removeAt(index);
       }
       updateCart();
@@ -54,25 +58,41 @@ class CartController extends GetxController {
       Loaders.customToast(message: 'Adet seçiniz');
       return;
     }
+
     if (product.productType == ProductType.variable.toString() &&
         variationController.selectedVariation.value.id.isEmpty) {
       Loaders.customToast(message: 'Varyasyon seçiniz');
       return;
     }
 
-    if (product.productType == ProductType.variable.toString()) {
-      if (variationController.selectedVariation.value.stock < 1) {
-        Loaders.warningSnackBar(
-            title: 'Hay Aksi',
-            message: 'Seçtiğiniz varyasyonda stok mevcut değil');
-        return;
-      }
-    } else {
-      if (product.stock < 1) {
-        Loaders.warningSnackBar(
-            title: 'Hay Aksi', message: 'Seçtiğiniz üründe stok mevcut değil');
-        return;
-      }
+    final isVariable = product.productType == ProductType.variable.toString();
+
+    int availableStock = isVariable
+        ? variationController.selectedVariation.value.stock
+        : product.stock;
+
+    if (availableStock < 1) {
+      Loaders.warningSnackBar(
+          title: 'Hay Aksi',
+          message:
+              'Seçtiğiniz ${isVariable ? "varyasyonda" : "üründe"} stok mevcut değil');
+      return;
+    }
+
+    // Sepette zaten varsa, toplam istenen adet stoktan büyükse engelle
+    int alreadyInCart = isVariable
+        ? getVariationQuantityInCart(
+            product.id, variationController.selectedVariation.value.id)
+        : getProductQuantityInCart(product.id);
+
+    int newTotalQuantity = alreadyInCart + productQuantityInCart.value;
+
+    if (newTotalQuantity > availableStock) {
+      Loaders.warningSnackBar(
+          title: 'Yetersiz Stok',
+          message:
+              'Sepetteki miktar ile birlikte toplam $newTotalQuantity adet isteniyor ancak stokta sadece $availableStock adet var.');
+      return;
     }
 
     final selectedCartItem =
@@ -83,7 +103,7 @@ class CartController extends GetxController {
         cartItem.variationId == selectedCartItem.variationId);
 
     if (index >= 0) {
-      cartItems[index].quantity = selectedCartItem.quantity;
+      cartItems[index].quantity += selectedCartItem.quantity;
     } else {
       cartItems.add(selectedCartItem);
     }
@@ -175,25 +195,25 @@ class CartController extends GetxController {
     updateCart();
   }
 
-  void removeFromCartDialog(int index) {
-    Get.defaultDialog(
-      title: 'Remove Product',
-      middleText: 'Are you sure you want to remove this product?',
+  void removeFromCartDialog(int index, BuildContext context) {
+    ConfirmationDialog.show(
+      context: context,
+      title: 'Sepetten Kaldır',
+      content: 'Ürünü sepetinizden kaldırmak istediğinize emin misiniz?',
       onConfirm: () {
         // Remove the item from the cart
         cartItems.removeAt(index);
         updateCart();
-        Loaders.customToast(message: 'Product removed from the Cart.');
-        Get.back();
+        Loaders.customToast(message: 'Ürün sepetinizden kaldırıldı.');
       },
       onCancel: () => Get.back(),
+      icon: Iconsax.warning_2,
+      iconColor: ProjectColors.redColor,
     );
   }
 
   /// -- Initialize already added Item's Count in the cart.
   void updateAlreadyAddedProductCount(ProductModel product) {
-    // If product has no variations then calculate cartEntries and display total number.
-    // Else make default entries to 0 and show cartEntries when variation is selected.
     if (product.productType == ProductType.single.toString()) {
       productQuantityInCart.value = getProductQuantityInCart(product.id);
     } else {
@@ -206,5 +226,13 @@ class CartController extends GetxController {
         productQuantityInCart.value = 0;
       }
     }
+  }
+
+  void removeItemCompletely(CartItemModel item) {
+    cartItems.removeWhere((element) =>
+        element.productId == item.productId &&
+        element.variationId == item.variationId);
+    updateCart();
+    Loaders.customToast(message: '${item.title} sepetten kaldırıldı.');
   }
 }

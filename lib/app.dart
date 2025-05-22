@@ -11,10 +11,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: TextScaler.noScaling),
+            child: child!,
+          );
+        },
+        title: 'Tarhanacı Yaşar Mobil Mağaza',
         themeMode: ThemeMode.system,
         theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        // darkTheme: AppTheme.darkTheme,
         initialBinding: GeneralBindings(),
         getPages: AppRoutes.pages,
         home: const Scaffold(

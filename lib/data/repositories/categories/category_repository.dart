@@ -27,7 +27,7 @@ class CategoryRepository extends GetxController {
   }
   Future<List<CategoryModel>> getFeaturedCategories() async {
     try {
-      final snapshot = await _db.collection('Categories').where('isFeatured',isEqualTo:true).get();
+      final snapshot = await _db.collection('Categories').where('isFeatured',isEqualTo:true).limit(6).get();
       final list = snapshot.docs
           .map((document) => CategoryModel.fromSnapshot(document))
           .toList();

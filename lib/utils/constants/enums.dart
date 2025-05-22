@@ -1,3 +1,3 @@
 enum ProductType { single, variable }
 
-enum OrderStatus { delivered, shipped, pending }
+enum OrderStatus { delivered, shipped, pending, processing, cancelled }

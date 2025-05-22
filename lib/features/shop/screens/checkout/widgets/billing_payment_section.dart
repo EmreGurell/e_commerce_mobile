@@ -16,7 +16,7 @@ class BillingPaymentSection extends StatelessWidget {
     final bool isDark = HelperFuctions.isDarkMode(context);
     return Column(
       children: [
-        SectionHeading(
+        SectionHeading(buttonColor: Theme.of(context).primaryColor,
             showActionButton: true,
             title: 'Ödeme Yöntemi',
             buttonTitle: 'Değiştir',

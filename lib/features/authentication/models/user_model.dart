@@ -7,8 +7,10 @@ class UserModel {
   String lastName;
   final String email;
   final String phoneNumber;
+  final String? profilePicture;
 
   UserModel({
+    this.profilePicture,
     required this.phoneNumber,
     required this.firstName,
     required this.lastName,
@@ -22,7 +24,12 @@ class UserModel {
   static List<String> nameParts(String fullName) => fullName.split(" ");
 
   static UserModel empty() => UserModel(
-      phoneNumber: '', firstName: '', lastName: '', email: '', id: '');
+        phoneNumber: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        id: '',
+      );
 
   // Convert model to JSON structure for storing data in Firebase.
   Map<String, dynamic> toJson() {
@@ -31,6 +38,7 @@ class UserModel {
       'lastName': lastName,
       'email': email,
       'phoneNumber': phoneNumber,
+      'profilePicture': profilePicture
     };
   }
 
@@ -52,6 +60,7 @@ class UserModel {
         firstName: (data['firstName'] ?? '').toString(),
         lastName: (data['lastName'] ?? '').toString(),
         email: (data['email'] ?? '').toString(),
+        profilePicture: (data['profilePicture'] ?? '').toString(),
       );
     } catch (e) {
       print("JSON parsing hatası: $e");

@@ -1,4 +1,4 @@
-import 'package:tarhanaciyasarmobil/features/controllers/signup/signup_controller.dart';
+import 'package:tarhanaciyasarmobil/features/authentication/controllers/signup/signup_controller.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/texts.dart';

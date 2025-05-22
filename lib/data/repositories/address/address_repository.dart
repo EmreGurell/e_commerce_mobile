@@ -11,8 +11,9 @@ class AddressRepository extends GetxController {
   Future<List<AddressModel>> fetchUserAddresses() async {
     try {
       final userId = AuthenticationRepository.instance.authUser!.uid;
-      if (userId.isEmpty)
+      if (userId.isEmpty) {
         throw 'Kullanıcı bilgisi bulunamadı. Lütfen birkaç dakika sonra tekrar deneyiniz.';
+      }
 
       final result = await _db
           .collection('Users')
@@ -52,6 +53,20 @@ class AddressRepository extends GetxController {
           .collection('Addresses')
           .add(address.toJson());
       return currentAddress.id;
+    } catch (e) {
+      throw 'Adres bilgisi kaydedilirken bir şeyler ters gitti. Lütfen daha sonra tekrar deneyin';
+    }
+  }
+
+  Future<void> deleteAddress(String id) async {
+    try {
+      final userID = AuthenticationRepository.instance.authUser!.uid;
+      await _db
+          .collection('Users')
+          .doc(userID)
+          .collection('Addresses')
+          .doc(id)
+          .delete();
     } catch (e) {
       throw 'Adres bilgisi kaydedilirken bir şeyler ters gitti. Lütfen daha sonra tekrar deneyin';
     }

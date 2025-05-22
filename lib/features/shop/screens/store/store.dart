@@ -1,124 +1,103 @@
-import 'package:tarhanaciyasarmobil/common/custom_shapes/containers/rounded_container.dart';
-import 'package:tarhanaciyasarmobil/common/custom_shapes/containers/search_container.dart';
-import 'package:tarhanaciyasarmobil/common/widgets/appbar/appbar.dart';
-import 'package:tarhanaciyasarmobil/common/widgets/appbar/tabbar.dart';
-import 'package:tarhanaciyasarmobil/common/widgets/layouts/grid_layout.dart';
-import 'package:tarhanaciyasarmobil/common/widgets/products/cart/cart_menu_icon.dart';
-import 'package:tarhanaciyasarmobil/common/widgets/texts/section_heading.dart';
-import 'package:tarhanaciyasarmobil/features/shop/controllers/brand_controller.dart';
-import 'package:tarhanaciyasarmobil/features/shop/controllers/category_controller.dart';
-import 'package:tarhanaciyasarmobil/features/shop/screens/store/widgets/category_tab.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/image_paths.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/texts.dart';
-import 'package:tarhanaciyasarmobil/utils/helpers/helper_fuctions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:tarhanaciyasarmobil/common/widgets/products/product_cards/product_card_vertical.dart';
+import 'package:tarhanaciyasarmobil/features/shop/controllers/brand_controller.dart';
+import 'package:tarhanaciyasarmobil/features/shop/controllers/category_controller.dart';
+import 'package:tarhanaciyasarmobil/features/shop/controllers/search_controller.dart';
+import 'package:tarhanaciyasarmobil/features/shop/screens/all_categories/category_products.dart';
+import 'package:tarhanaciyasarmobil/features/shop/screens/brands/widgets/brand_card.dart';
+import 'package:tarhanaciyasarmobil/features/shop/screens/store/widgets/store_appbar.dart';
+
+import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 
 class Store extends StatelessWidget {
   const Store({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(BrandController());
+    final brandController = Get.put(BrandController());
     final categories = CategoryController.instance.featuredCategories;
+    final searchController = Get.put(MySearchController());
+
     if (categories.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
-    final isDark = HelperFuctions.isDarkMode(context);
-    return DefaultTabController(
-      length: categories.length,
-      child: Scaffold(
-        appBar: MyAppbar(
-          centerTitle: false,
-          title: Text(ProjectTexts.storeAppBarTitle,
-              style: Theme.of(context).textTheme.headlineMedium),
-          actions: [ShoppingCartCounter()],
-        ),
-        body: NestedScrollView(
-          headerSliverBuilder: (_, innerBoxIsScrolled) {
-            return [
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                pinned: true,
-                floating: true,
-                backgroundColor: isDark
-                    ? ProjectColors.neutralBlackColor
-                    : ProjectColors.whiteColor,
-                expandedHeight: 440,
-                flexibleSpace: Padding(
-                  padding: const EdgeInsets.all(ProjectSizes.pagePadding),
-                  child: ListView(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      const SizedBox(height: ProjectSizes.spaceBtwItems),
-                      const SearchBarContainer(
-                        padding: EdgeInsets.zero,
-                        showBorder: true,
-                        showBackground: false,
-                        text: ProjectTexts.search,
-                        icon: Iconsax.search_normal,
-                      ),
-                      const SizedBox(height: ProjectSizes.spaceBtwItems * 2),
-                      SectionHeading(
-                        showActionButton: true,
-                        title: 'Featured Products',
-                        buttonTitle: 'View All',
-                        onPressed: () {},
-                      ),
-                      const SizedBox(height: ProjectSizes.spaceBtwItems / 1.5),
-                      GridLayout(
-                        itemCount: 4,
-                        itemBuilder: (_, index) {
-                          return GestureDetector(
-                            onTap: () {},
-                            child: RoundedContainer(
-                              padding: const EdgeInsets.all(ProjectSizes.IconS),
-                              showBorder: true,
-                              backgroundColor: Colors.transparent,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 56,
-                                    height: 56,
-                                    padding: const EdgeInsets.all(
-                                        ProjectSizes.IconS),
-                                    decoration: BoxDecoration(
-                                      color: isDark
-                                          ? ProjectColors.neutralBlackColor
-                                          : ProjectColors.whiteColor,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Image(
-                                      image: AssetImage(ImagePaths.banner1),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                bottom: MyTabBar(
-                  tabs: categories
-                      .map((category) => Tab(child: Text(category.name)))
-                      .toList(),
-                ),
+
+    return Scaffold(
+      appBar: StoreScreenAppBar(controller: searchController),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(ProjectSizes.pagePadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// 🏷️ Kategoriler
+            Text('Kategoriler', style: Theme.of(context).textTheme.titleLarge),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Wrap(
+                spacing: 4,
+                runSpacing: 8,
+                children: categories.map((category) {
+                  return ActionChip(
+                    side: BorderSide.none,
+                    label: Text(category.name),
+                    onPressed: () =>
+                        Get.to(() => CategoryProducts(category: category)),
+                  );
+                }).toList(),
               ),
-            ];
-          },
-          body: TabBarView(
-            children: categories
-                .map((category) => CategoryTab(category: category))
-                .toList(),
-          ),
+            ),
+
+            const SizedBox(height: ProjectSizes.spaceBtwItems),
+
+            /// 🏭 Markalar
+            Text('Markalar', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: ProjectSizes.spaceBtwItems / 2),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Wrap(
+                spacing: ProjectSizes.small,
+                runSpacing: ProjectSizes.small,
+                children: brandController.featuredBrands.map((brand) {
+                  return SizedBox(
+                    height: 75,
+                    width: 150,
+                    child: BrandCard(brand: brand, showBorder: false),
+                  );
+                }).toList(),
+              ),
+            ),
+
+            const SizedBox(height: ProjectSizes.spaceBtwItems),
+            Text('Ürünler', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: ProjectSizes.spaceBtwItems),
+
+            Obx(() {
+              return Column(children: [
+                if (searchController.isLoading.value)
+                  const Center(child: CircularProgressIndicator())
+                else if (searchController.products.isEmpty)
+                  const Center(child: Text('Aramanıza uygun ürün bulunamadı'))
+                else
+                  GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisExtent: 300,
+                      crossAxisSpacing: ProjectSizes.spaceBtwItems,
+                      mainAxisSpacing: ProjectSizes.spaceBtwItems,
+                    ),
+                    itemCount: searchController.products.length,
+                    itemBuilder: (context, index) {
+                      final product = searchController.products[index];
+                      return ProductCardVertical(product: product);
+                    },
+                  )
+              ]);
+            }),
+          ],
         ),
       ),
     );

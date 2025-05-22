@@ -56,4 +56,23 @@ class BrandRepository extends GetxController {
       throw 'Bir şeyler ters gitti. Lütfen tekrar deneyiniz.';
     }
   }
+  Future<int> getProductCountForBrand(String brandId) async {
+    try {
+      final querySnapshot = await _db
+          .collection('Products')
+          .where('brand.id', isEqualTo: brandId)
+          .get();
+
+      return querySnapshot.size;
+    } on FirebaseException catch (e) {
+      throw MyFirebaseException(e.code).message;
+    } on FormatException {
+      throw const MyFormatException().message;
+    } on PlatformException catch (e) {
+      throw MyPlatformException(e.code).message;
+    } catch (_) {
+      throw 'Bir şeyler ters gitti. Lütfen tekrar deneyiniz.';
+    }
+  }
 }
+

@@ -1,4 +1,4 @@
-import 'package:tarhanaciyasarmobil/features/controllers/onboarding/onboarding_controller.dart';
+import 'package:tarhanaciyasarmobil/features/authentication/controllers/onboarding/onboarding_controller.dart';
 import 'package:tarhanaciyasarmobil/features/authentication/screens/onboarding/widgets/onboarding_next_btn.dart';
 import 'package:tarhanaciyasarmobil/features/authentication/screens/onboarding/widgets/onboarding_page_indicator.dart';
 import 'package:tarhanaciyasarmobil/features/authentication/screens/onboarding/widgets/onboarding_screen.dart';

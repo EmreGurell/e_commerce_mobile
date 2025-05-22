@@ -8,16 +8,17 @@ import 'package:tarhanaciyasarmobil/features/personalization/screens/profile/pro
 import 'package:tarhanaciyasarmobil/features/personalization/screens/settings/settings.dart';
 import 'package:tarhanaciyasarmobil/features/shop/screens/cart/cart.dart';
 import 'package:tarhanaciyasarmobil/features/shop/screens/checkout/checkout.dart';
-import 'package:tarhanaciyasarmobil/features/shop/screens/home/home.dart';
 import 'package:tarhanaciyasarmobil/features/shop/screens/order/order.dart';
 import 'package:tarhanaciyasarmobil/features/shop/screens/store/store.dart';
 import 'package:tarhanaciyasarmobil/features/shop/screens/wishlist/wishlist.dart';
 import 'package:tarhanaciyasarmobil/routes/routes.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
+import '../navigation_menu.dart';
+
 class AppRoutes {
   static final pages = [
-    GetPage(name: Routes.home, page: () => const HomeScreen()),
+    GetPage(name: Routes.home, page: () => NavigationMenu()),
     GetPage(name: Routes.store, page: () => const Store()),
     GetPage(name: Routes.favourites, page: () => const Wishlist()),
     GetPage(name: Routes.settings, page: () => const SettingsScreen()),

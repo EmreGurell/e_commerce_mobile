@@ -7,6 +7,8 @@ import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:tarhanaciyasarmobil/utils/helpers/cloud_helpers.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/brand_model.dart';
+import '../../../models/product_model.dart';
 class CategoryBrands extends StatelessWidget {
   const CategoryBrands({
     super.key,
@@ -18,7 +20,9 @@ class CategoryBrands extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = BrandController.instance;
-    return FutureBuilder(
+    final List<Color> usedColors = []; // renkleri burada topla
+
+    return FutureBuilder<List<BrandModel>>(
       future: controller.getBrandsForCategory(category.id),
       builder: (context, snapshot) {
         const loader = Column(
@@ -36,15 +40,19 @@ class CategoryBrands extends StatelessWidget {
         );
         if (widget != null) return widget;
 
-        final brands = snapshot.data!;
+        final brands = snapshot.data ?? [];
+        if (brands.isEmpty) {
+          return const Center(child: Text('Marka bulunamadı'));
+        }
+
         return ListView.builder(
-          // Eksik return eklendi
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: brands.length,
           itemBuilder: (_, index) {
             final brand = brands[index];
-            return FutureBuilder(
+
+            return FutureBuilder<List<ProductModel>>(
               future: controller.getBrandProducts(brandId: brand.id, limit: 3),
               builder: (context, snapshot) {
                 final widget = CloudHelperFunctions.checkMultiRecordState(
@@ -53,10 +61,13 @@ class CategoryBrands extends StatelessWidget {
                 );
                 if (widget != null) return widget;
 
-                final products = snapshot.data!;
+                final products = snapshot.data ?? [];
+
                 return BrandShowcase(
                   images: products.map((e) => e.thumbnail).toList(),
                   brand: brand,
+                  usedColors: usedColors, // aynı listeyi geçir
+                  index: index, // index'i geçir
                 );
               },
             );
@@ -66,3 +77,5 @@ class CategoryBrands extends StatelessWidget {
     );
   }
 }
+
+

@@ -33,28 +33,50 @@ class OrderController extends GetxController {
     try {
       FullScreenLoader.openLoadingDialog(
           'Siparişiniz işleniyor...', ImagePaths.pencilAnimation);
-      final uid = AuthenticationRepository.instance.authUser!.uid;
+
+      final uid = AuthenticationRepository.instance.authUser?.uid ?? '';
       if (uid.isEmpty) return;
 
+      final selectedAddress = addressController.selectedAddress.value;
+      if (selectedAddress.id == null || selectedAddress.id!.isEmpty) {
+        FullScreenLoader.stopLoading();
+        Loaders.warningSnackBar(
+          title: 'Adres Gerekli',
+          message: 'Lütfen önce bir teslimat adresi seçiniz.',
+        );
+        return;
+      }
+
       final order = OrderModel(
-          id: UniqueKey().toString(),
-          userId: uid,
-          status: OrderStatus.pending,
-          totalAmount: totalAmount,
-          orderDate: DateTime.now(),
-          paymentMethod: checkoutController.selectedPaymentMethod.value.name,
-          address: addressController.selectedAddress.value,
-          deliveryDate: DateTime.now(),
-          items: cartController.cartItems.toList());
+        id: UniqueKey().toString(),
+        userId: uid,
+        status: OrderStatus.pending,
+        totalAmount: totalAmount,
+        orderDate: DateTime.now(),
+        paymentMethod: checkoutController.selectedPaymentMethod.value.name,
+        shippingAddress: selectedAddress,
+        deliveryDate:
+            DateTime.now().add(const Duration(days: 3)), // örnek teslim tarihi
+        items: cartController.cartItems.toList(),
+      );
 
       await orderRepository.saveOrder(order, uid);
       cartController.clearCart();
 
+      FullScreenLoader.stopLoading();
+
       Get.off(() => SuccessScreen(
-          image: ImagePaths.orderCompletedAnimation,
-          title: 'ödeme Başarılı',
-          subtitle: 'Siparişiniz en kısa sürede kargoya verilecektir.',
-          onPressed: () => Get.offAll(() => NavigationMenu())));
-    } catch (e) {}
+            image: ImagePaths.orderCompletedAnimation,
+            title: 'Ödeme Başarılı',
+            subtitle: 'Siparişiniz en kısa sürede kargoya verilecektir.',
+            onPressed: () => Get.offAll(() => NavigationMenu()),
+          ));
+    } catch (e) {
+      FullScreenLoader.stopLoading();
+      Loaders.errorSnackBar(
+        title: 'Sipariş Başarısız',
+        message: 'Bir hata oluştu: ${e.toString()}',
+      );
+    }
   }
 }

@@ -6,14 +6,14 @@ class BrandModel {
   String name;
   String image;
   bool? isFeatured;
-  String? productsCount;
+  int productsCount;
 
   BrandModel({
     required this.id,
     required this.name,
     required this.image,
     this.isFeatured,
-    this.productsCount,
+    this.productsCount = 0,
   });
 
   static BrandModel empty() => BrandModel(id: '', image: '', name: '');
@@ -50,7 +50,7 @@ class BrandModel {
         name: data['name'] ?? '',
         image: data['image'] ?? '',
         isFeatured: data['isFeatured'] ?? false,
-        productsCount: data['productsCount']?.toString(),
+        productsCount: data['productsCount'] ?? 0,
       );
     } else {
       return BrandModel.empty();

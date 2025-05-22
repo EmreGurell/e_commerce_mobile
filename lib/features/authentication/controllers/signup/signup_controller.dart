@@ -35,82 +35,94 @@ class SignupController extends GetxController {
   // Sign-up method
   Future<void> signup() async {
     try {
-      // Start Loading
       FullScreenLoader.openLoadingDialog(
-          'Bilgileriniz işleniyor..', ImagePaths.docerAnimation);
+        'Bilgileriniz işleniyor..',
+        ImagePaths.docerAnimation,
+      );
 
-      // Check Internet Connectivity
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected) {
         FullScreenLoader.stopLoading();
         Loaders.errorSnackBar(
-            title: 'Bağlantı Hatası', message: 'İnternete bağlı değilsiniz.');
+          title: 'Bağlantı Yok',
+          message: 'Lütfen internet bağlantınızı kontrol edin.',
+        );
         return;
       }
 
-      // Form Validation
       if (!signupFormKey.currentState!.validate()) {
         FullScreenLoader.stopLoading();
         return;
       }
 
-      // Privacy Policy Check
       if (!privacyPolicy.value) {
+        FullScreenLoader.stopLoading();
         Loaders.warningSnackBar(
-            title: 'Gizlilik Politikasını kabul et',
-            message:
-                'Hesap açmak için gizlilik politikasını ve kullanım koşullarını kabul et');
+          title: 'Gizlilik Politikasını kabul et',
+          message:
+              'Hesap açmak için gizlilik politikasını ve kullanım koşullarını kabul et',
+        );
         return;
       }
 
-      // Check if password and confirmation password match
       if (password.text.trim() != passwordCheck.text.trim()) {
+        FullScreenLoader.stopLoading();
         Loaders.warningSnackBar(
-            title: 'Şifreler Eşleşmiyor',
-            message: 'Lütfen şifrelerinizi kontrol edin.');
+          title: 'Şifreler Eşleşmiyor',
+          message: 'Lütfen şifrelerinizi kontrol edin.',
+        );
         return;
       }
 
-      // Register user in the Firebase Authentication & Save user data in Firebase Firestore
       final userCredential = await AuthenticationRepository.instance
           .registerWithEmailAndPassword(
               email.text.trim(), password.text.trim());
 
-      // Save Authenticated user data in Firebase Firestore
-      final newUser = UserModel(
-          id: userCredential.user!.uid,
-          firstName: firstName.text.trim(),
-          lastName: lastName.text.trim(),
-          email: email.text.trim(),
-          phoneNumber: phoneNumber.text.trim());
-
-      final userRepository = Get.put(UserRepository());
-      try {
-        await userRepository.saveUserRecord(newUser);
-      } catch (e) {
+      if (userCredential.user == null) {
+        FullScreenLoader.stopLoading();
         Loaders.errorSnackBar(
-            title: 'Veri Kaydetme Hatası',
-            message: 'Kullanıcı verisi kaydedilirken bir hata oluştu.');
+          title: 'Kayıt Başarısız',
+          message: 'Bilinmeyen bir hata oluştu.',
+        );
         return;
       }
 
-      // Show Success Message
+      await userCredential.user!.sendEmailVerification();
+
+      final newUser = UserModel(
+        id: userCredential.user!.uid,
+        firstName: firstName.text.trim(),
+        lastName: lastName.text.trim(),
+        email: email.text.trim(),
+        phoneNumber: phoneNumber.text.trim(),
+      );
+
+      final userRepository = Get.put(UserRepository());
+
+      try {
+        await userRepository.saveUserRecord(newUser);
+      } catch (e) {
+        FullScreenLoader.stopLoading();
+        Loaders.errorSnackBar(
+          title: 'Veri Kaydetme Hatası',
+          message: 'Kullanıcı verisi kaydedilirken bir hata oluştu.',
+        );
+        return;
+      }
+      FullScreenLoader.stopLoading();
       Loaders.successSnackBar(
-          title: 'Hesabınız başarıyla oluşturuldu',
-          message: 'Devam etmek için e-postanızı doğrulayın');
+        title: 'Hesabınız başarıyla oluşturuldu',
+        message: 'Devam etmek için e-postanızı doğrulayın',
+      );
 
-      // Move to Verify Email Screen
-      Get.off(() => VerifyEmailScreen(
-            email: email.text.trim(),
-          )); // Remove previous screens
+      Get.to(() => VerifyEmailScreen(email: email.text.trim()));
     } catch (e) {
-      // Log the error for debugging
-      print("Error: ${e.toString()}");
-
-      // Show some Generic Error to the user
-      Loaders.errorSnackBar(title: 'Hay Aksi', message: e.toString());
+      print("Signup Error: ${e.toString()} - Type: ${e.runtimeType}");
+      Loaders.errorSnackBar(
+        title: 'Hay Aksi',
+        message: e.toString(),
+      );
     } finally {
-      // Remove Loader
       FullScreenLoader.stopLoading();
     }
   }

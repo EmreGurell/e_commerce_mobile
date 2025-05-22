@@ -13,11 +13,12 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData lightTheme = ThemeData(
+      colorScheme: ColorScheme.light(),
       useMaterial3: true,
-      fontFamily: 'Poppins',
+      fontFamily: 'Nunito',
       brightness: Brightness.light,
-      primaryColor: Colors.blue,
-      scaffoldBackgroundColor: Colors.white,
+      primaryColor: ProjectColors.greenColor,
+      scaffoldBackgroundColor: ProjectColors.scaffoldLight,
       textTheme: CustomTextTheme.lightTextTheme,
       chipTheme: CustomChipTheme.lightChipThemeData,
       appBarTheme: CustomAppBarTheme.lightAppBarTheme,
@@ -28,7 +29,7 @@ class AppTheme {
       outlinedButtonTheme: CustomOutlinedButtonTheme.lightOutlinedButtonTheme);
   static ThemeData darkTheme = ThemeData(
       useMaterial3: true,
-      fontFamily: 'Poppins',
+      fontFamily: 'Nunito',
       brightness: Brightness.dark,
       primaryColor: Colors.blue,
       scaffoldBackgroundColor: ProjectColors.neutralBlackColor,

@@ -9,6 +9,7 @@ import 'package:tarhanaciyasarmobil/utils/helpers/cloud_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:tarhanaciyasarmobil/utils/helpers/helper_fuctions.dart';
 
 class OrderListItems extends StatelessWidget {
   const OrderListItems({super.key});
@@ -21,10 +22,10 @@ class OrderListItems extends StatelessWidget {
         builder: (_, snapshot) {
           /// Nothing Found Widget
           final emptyWidget = AnimationLoaderWidget(
-            text: 'Whoops! No Orders Yet!',
+            text: 'Henüz Siparişiniz Yok!',
             animation: ImagePaths.orderCompletedAnimation,
             showAction: true,
-            actionText: 'Let\'s fill it',
+            actionText: 'Haydi ilk siparişini ver!',
             onActionPressed: () => Get.off(() => NavigationMenu()),
           ); // TAnimationLoaderWidget
 
@@ -42,14 +43,14 @@ class OrderListItems extends StatelessWidget {
               itemCount: orders.length,
               shrinkWrap: true,
               separatorBuilder: (_, index) => const SizedBox(
-                    height: ProjectSizes.spaceBtwItems,
+                    height: ProjectSizes.spaceBtwItems / 2,
                   ),
               itemBuilder: (_, index) {
                 final order = orders[index];
 
                 return RoundedContainer(
                   borderColor: ProjectColors.whiteColor,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: Colors.white,
                   padding: const EdgeInsets.all(ProjectSizes.spaceBtwItems),
                   showBorder: true,
                   child: Column(
@@ -72,7 +73,9 @@ class OrderListItems extends StatelessWidget {
                                       .textTheme
                                       .bodyLarge!
                                       .apply(
-                                          color: ProjectColors.blueColor,
+                                          color: HelperFuctions
+                                              .getOrderStatusColor(
+                                                  order.status),
                                           fontWeightDelta: 1),
                                 ),
                                 Text(order.formattedOrderDate,

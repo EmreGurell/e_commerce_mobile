@@ -6,18 +6,20 @@ class GridLayout extends StatelessWidget {
     super.key,
     required this.itemCount,
     required this.itemBuilder,
+    this.mainAxisExtent = 300,
+    this.crossAxisCount = 2,
   });
 
-  final int itemCount;
+  final int itemCount, crossAxisCount;
   final Widget? Function(BuildContext, int) itemBuilder;
+  final double mainAxisExtent;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        double itemWidth =
-            (constraints.maxWidth - ProjectSizes.spaceBtwItems) / 2;
-        double mainAxisExtent = itemWidth * 1.4;
+        double itemWidth = (constraints.maxWidth - ProjectSizes.spaceBtwItems) /
+            crossAxisCount;
 
         return GridView.builder(
           padding: EdgeInsets.zero,
@@ -26,9 +28,9 @@ class GridLayout extends StatelessWidget {
           shrinkWrap: true,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             mainAxisExtent: mainAxisExtent,
-            crossAxisCount: 2,
+            crossAxisCount: crossAxisCount,
             mainAxisSpacing: ProjectSizes.spaceBtwItems,
-            crossAxisSpacing: ProjectSizes.spaceBtwItems,
+            crossAxisSpacing: ProjectSizes.small,
           ),
           itemBuilder: itemBuilder,
         );

@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:tarhanaciyasarmobil/app.dart';
 import 'package:tarhanaciyasarmobil/data/repositories/authentication/authentication_repository.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,14 @@ Future<void> main() async {
 
   // GetX Local Storage
   await GetStorage.init();
-
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.black, // 📛 Status bar arka plan rengi
+      statusBarIconBrightness:
+          Brightness.light, // 🔆 Açık ikonlar (açık tema için)
+      statusBarBrightness: Brightness.dark, // 🔅 iOS için
+    ),
+  );
   // Await Splash until other items load
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 

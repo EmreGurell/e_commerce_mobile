@@ -22,7 +22,7 @@ class SettingsMenuListTile extends StatelessWidget {
       leading: Icon(
         icon,
         size: 28,
-        color: ProjectColors.blueColor,
+        color: ProjectColors.green2Color,
       ),
       title: Text(
         title,

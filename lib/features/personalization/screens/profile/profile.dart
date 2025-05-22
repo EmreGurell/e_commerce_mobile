@@ -40,11 +40,19 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(
                       height: ProjectSizes.spaceBtwItems * 2,
                     ),
-                    RoundedImage(
-                      imageUrl: ImagePaths.onboardingImage4,
-                      width: 100,
-                      height: 100,
-                    ),
+                    Obx(() => RoundedImage(
+                          fit: BoxFit.fill,
+                          borderRadius: 100,
+                          applyImageRadius: true,
+                          isNetworkImage:
+                              controller.user.value.profilePicture != null
+                                  ? true
+                                  : false,
+                          imageUrl: controller.user.value.profilePicture ??
+                              ImagePaths.onboardingImage4,
+                          width: 100,
+                          height: 100,
+                        )),
                     const SizedBox(
                       height: ProjectSizes.spaceBtwItems,
                     ),

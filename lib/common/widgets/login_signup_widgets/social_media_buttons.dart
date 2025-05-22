@@ -1,4 +1,4 @@
-import 'package:tarhanaciyasarmobil/features/controllers/login/login_controller.dart';
+import 'package:tarhanaciyasarmobil/features/authentication/controllers/login/login_controller.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/image_paths.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
@@ -33,7 +33,7 @@ class SocialMediaButtons extends StatelessWidget {
         const SizedBox(
           width: ProjectSizes.spaceBtwItems,
         ),
-        Container(
+    /*    Container(
           decoration: BoxDecoration(
               border: Border.all(
                 color: ProjectColors.gray4Color,
@@ -46,7 +46,7 @@ class SocialMediaButtons extends StatelessWidget {
                 height: ProjectSizes.IconM,
                 image: AssetImage(ImagePaths.facebookIcon),
               )),
-        )
+        )*/
       ],
     );
   }

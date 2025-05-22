@@ -1,4 +1,5 @@
 import 'package:tarhanaciyasarmobil/features/shop/controllers/cart_controller.dart';
+import 'package:tarhanaciyasarmobil/features/shop/controllers/product/images_controller.dart';
 import 'package:tarhanaciyasarmobil/features/shop/models/product_model.dart';
 import 'package:tarhanaciyasarmobil/features/shop/models/product_variation_model.dart';
 import 'package:get/get.dart';
@@ -14,32 +15,37 @@ class VariationController extends GetxController {
 
   // Select Attribute and Variation
   void onAttributeSelected(
-      ProductModel product, attributeName, attributeValue) {
-    // When an attribute is selected we will first add that attribute to the selectedAttributes
-    final selectedAttributes =
-        Map<String, dynamic>.from(this.selectedAttributes);
-    this.selectedAttributes[attributeName] = attributeValue;
+      ProductModel product, String attributeName, String attributeValue) {
+    // Attribute'u doğrudan güncelle
+    selectedAttributes[attributeName] = attributeValue;
 
-    final selectedVariation = product.productVariations!.firstWhere(
-      (variation) =>
-          isSameAttributeValues(variation.attributeValues, selectedAttributes),
+    // Güncel selectedAttributes map’ini kullan
+    final currentSelectedAttributes =
+        Map<String, dynamic>.from(selectedAttributes);
+
+    final matchingVariation = product.productVariations!.firstWhere(
+      (variation) => isSameAttributeValues(
+          variation.attributeValues, currentSelectedAttributes),
       orElse: () => ProductVariationModel.empty(),
     );
 
-    // Show the selected Variation image as a Main Image
-    if (selectedVariation.image.isNotEmpty) {
-      // ImagesController.instance.selectedProductImage.value =
-      //     selectedVariation.image;
+    // Varyasyon görselini değiştir
+    if (matchingVariation.image.isNotEmpty) {
+      ImagesController.instance.selectedProductImage.value =
+          matchingVariation.image;
     }
-    if (selectedVariation.id.isNotEmpty) {
+
+    // Sepetteki miktarı güncelle
+    if (matchingVariation.id.isNotEmpty) {
       final cartController = CartController.instance;
       cartController.productQuantityInCart.value = cartController
-          .getVariationQuantityInCart(product.id, selectedVariation.id);
+          .getVariationQuantityInCart(product.id, matchingVariation.id);
     }
-    //Assign Selected Variation
-    this.selectedVariation.value = selectedVariation;
 
-    // Update selected product variation status
+    // Varyasyonu kaydet
+    selectedVariation.value = matchingVariation;
+
+    // Stok durumunu güncelle
     getProductVariationStockStatus();
   }
 

@@ -1,19 +1,20 @@
-import 'package:tarhanaciyasarmobil/common/widgets/appbar/appbar.dart';
-import 'package:tarhanaciyasarmobil/common/widgets/icons/circular_icon.dart';
-import 'package:tarhanaciyasarmobil/features/shop/controllers/cart_controller.dart';
-import 'package:tarhanaciyasarmobil/features/shop/models/product_model.dart';
-
-import 'package:tarhanaciyasarmobil/features/shop/screens/product_detail/widgets/rate_and_share.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/image_paths.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/texts.dart';
-import 'package:tarhanaciyasarmobil/utils/device/device_utility.dart';
-import 'package:tarhanaciyasarmobil/utils/helpers/helper_fuctions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
+import 'package:tarhanaciyasarmobil/common/widgets/appbar/appbar.dart';
+import 'package:tarhanaciyasarmobil/common/widgets/products/cart/cart_menu_icon.dart';
+import 'package:tarhanaciyasarmobil/common/widgets/products/favourite_icon/favourite_icon.dart';
+import 'package:tarhanaciyasarmobil/common/widgets/texts/product_brand_text.dart';
+import 'package:tarhanaciyasarmobil/features/shop/controllers/cart_controller.dart';
+import 'package:tarhanaciyasarmobil/features/shop/controllers/product/product_controller.dart';
+import 'package:tarhanaciyasarmobil/features/shop/controllers/product/variation_controller.dart';
+import 'package:tarhanaciyasarmobil/features/shop/models/product_model.dart';
+import 'package:tarhanaciyasarmobil/features/shop/screens/product_detail/widgets/product_attributes.dart';
+import 'package:tarhanaciyasarmobil/features/shop/screens/product_detail/widgets/product_detail_price_text.dart';
+import 'package:tarhanaciyasarmobil/features/shop/screens/product_detail/widgets/product_image_slider.dart';
+import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
+import 'package:tarhanaciyasarmobil/utils/constants/enums.dart';
+import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen({super.key, required this.product});
@@ -21,133 +22,111 @@ class ProductDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = HelperFuctions.isDarkMode(context);
+    final productController = Get.put(ProductController());
+    final selectedVariation = productController.selectedVariation;
+
+    if (product.productVariations != null &&
+        product.productVariations!.isNotEmpty &&
+        selectedVariation.value.id.isEmpty) {
+      selectedVariation.value = product.productVariations!.first;
+    }
 
     return Scaffold(
-      bottomNavigationBar: BottomAddToCart(
-        product: product,
-      ),
+      extendBodyBehindAppBar: true,
+      bottomNavigationBar: BottomAddToCart(product: product),
       appBar: MyAppbar(
+        backIconColor: Colors.white,
+        backgroundColor: Colors.transparent,
         showBackArrow: true,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Iconsax.heart))
+          FavouriteIcon(
+            productId: product.id,
+            backgroundColor: Colors.white,
+          ),
+          const ShoppingCartCounter(
+            backgroundColor: Colors.white,
+          )
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Üst Resim
-            Stack(
-              children: [
-                Container(
-                  color: isDark
-                      ? ProjectColors.grayColor
-                      : ProjectColors.whiteColor,
-                  child: SizedBox(
-                    height: 400,
-                    width: double.infinity,
-                    child: Image.asset(
-                      ImagePaths.tereyag,
-                      width: DeviceUtility.getScreenWidth(context),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 20,
-                  left: ProjectSizes.pagePadding,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '350 TL',
-                      style: Theme.of(context).textTheme.headlineLarge!.apply(
-                            color: ProjectColors.whiteColor,
-                          ),
-                    ),
-                  ),
-                ),
-              ],
+            ProductImageSlider(
+              product: product,
             ),
             const SizedBox(height: ProjectSizes.spaceBtwItems),
-
             Padding(
-              padding: const EdgeInsets.all(ProjectSizes.pagePadding),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: ProjectSizes.pagePadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: ProjectSizes.spaceBtwItems),
                   Text(
-                    'Tuzlu Tereyağ',
+                    product.title.toUpperCase(),
+                    maxLines: 1,
                     style: Theme.of(context)
                         .textTheme
                         .headlineMedium!
-                        .apply(fontWeightDelta: 2),
+                        .apply(fontFamily: 'Poppins'),
                   ),
-                  const RateAndShare(),
-                  const SizedBox(height: ProjectSizes.spaceBtwItems),
-                  Text('Gramaj',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .apply(color: ProjectColors.gray2Color)),
-                  const SizedBox(height: ProjectSizes.spaceBtwItems),
-                  Row(
-                    children: [
-                      Wrap(
-                        spacing: ProjectSizes.spaceBtwItems / 2,
-                        children: [
-                          ChoiceChip(
-                            label: const Text('1kg'),
-                            selected: false,
-                            onSelected: (value) {},
-                          ),
-                          ChoiceChip(
-                            label: const Text('5kg'),
-                            selected: true,
-                            onSelected: (value) {},
-                            labelStyle: const TextStyle(
-                                color: ProjectColors.whiteColor),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const Divider(),
+                  ProductBrandText(title: product.brand!.name, maxLines: 1),
+                  const SizedBox(height: ProjectSizes.spaceBtwItems / 2),
+                  const SizedBox(height: ProjectSizes.spaceBtwItems / 2),
+                  ProductAttributes(product: product),
                   const SizedBox(height: ProjectSizes.spaceBtwItems),
                   Text(
-                    'Ürün Özellikleri',
-                    style: Theme.of(context).textTheme.headlineSmall!,
+                    'Ürün Açıklaması',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .apply(color: ProjectColors.neutralBlackColor),
                   ),
-                  const SizedBox(height: ProjectSizes.spaceBtwItems),
-                  ReadMoreText(
-                    "Tereyağımız Malatya yöresine ait olup büyükbaş hayvanın tereyağıdır. Tereyağı pilavdan tatlıya, keteden böreğe, tatlıdan kahvaltıya kadar çok geniş bir kullanım alanına sahiptir.Tereyağlarımız 1 er kiloluk vakumlu hava geçirmez poşetlerde sizlere gönderilmektedir.",
-                    style: isDark
-                        ? Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .apply(color: ProjectColors.gray4Color)
-                        : Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .apply(color: ProjectColors.gray3Color),
-                    trimLines: 2,
-                    trimMode: TrimMode.Line,
-                    trimCollapsedText: ProjectTexts.dahaFazlaGoster,
-                    trimExpandedText: ProjectTexts.dahaAzGoster,
-                    moreStyle: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w800),
-                    lessStyle: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w800),
-                  ),
-                  const SizedBox(height: ProjectSizes.spaceBtwItems),
+                  const SizedBox(height: ProjectSizes.spaceBtwItems / 2),
+                  product.productType == ProductType.single.toString()
+                      ? ReadMoreText(
+                          product.description ?? '',
+                          trimLines: 5, // kaç satırdan sonra kısaltsın
+                          trimMode: TrimMode.Line,
+                          trimCollapsedText: 'Devamını Oku',
+                          trimExpandedText: 'Daha Az Göster',
+                          style: Theme.of(context).textTheme.bodySmall!.apply(
+                              color: ProjectColors.gray2Color,
+                              fontFamily: 'Poppins'),
+                        )
+                      : Obx(() => ReadMoreText(
+                            style:
+                                Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      fontFamily: 'Poppins',
+                                    ),
+                            lessStyle: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .apply(
+                                    fontWeightDelta: 2,
+                                    color: Theme.of(context).primaryColor),
+                            moreStyle: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .apply(
+                                    fontWeightDelta: 2,
+                                    color: Theme.of(context).primaryColor),
+                            VariationController.instance.selectedVariation.value
+                                    .description ??
+                                '',
+                            trimLines: 5, // kaç satırdan sonra kısaltsın
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: 'Devamını Oku',
+                            trimExpandedText: 'Daha Az Göster',
+                          )),
+                  // Text(
+                  //   textAlign: TextAlign.end,
+                  //   'Stok: ${product.stock}',
+                  //   style: Theme.of(context)
+                  //       .textTheme
+                  //       .bodySmall!
+                  //       .apply(color: ProjectColors.gray3Color),
+                  // ),
                 ],
               ),
             ),
@@ -159,76 +138,100 @@ class ProductDetailScreen extends StatelessWidget {
 }
 
 class BottomAddToCart extends StatelessWidget {
-  const BottomAddToCart({
-    super.key,
-    required this.product,
-  });
+  const BottomAddToCart({super.key, required this.product});
   final ProductModel product;
+
   @override
   Widget build(BuildContext context) {
-    final isDark = HelperFuctions.isDarkMode(context);
     final controller = CartController.instance;
-    controller.updateAlreadyAddedProductCount(product);
+    Get.find<ProductController>();
+
     return Container(
-      decoration: BoxDecoration(
-        color:
-            isDark ? ProjectColors.neutralBlackColor : ProjectColors.whiteColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
+      decoration: const BoxDecoration(
+        color: ProjectColors.whiteColor,
       ),
       child: BottomAppBar(
         elevation: 0,
         color: Colors.transparent,
-        child: Obx(
-          () => Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: DeviceUtility.getScreenWidth(context) * 0.4,
-                child: Obx(
-                  () => Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CircularIcon(
-                          icon: Iconsax.minus,
-                          onPressed: () =>
-                              controller.productQuantityInCart.value < 1
-                                  ? null
-                                  : controller.productQuantityInCart.value -=
-                                      1),
-                      Text(
-                        controller.productQuantityInCart.value.toString(),
-                        style: Theme.of(context).textTheme.headlineMedium,
+        child: Row(
+          children: [
+            /// FİYAT KISMI
+            Expanded(
+              flex: 1,
+              child: Obx(() {
+                final variation =
+                    VariationController.instance.selectedVariation.value;
+
+                if (product.productType == ProductType.single.toString()) {
+                  return ProductDetailPriceText(
+                    price: product.price,
+                    salePrice: product.salePrice,
+                    maxLines: 1,
+                  );
+                } else {
+                  return ProductDetailPriceText(
+                    price: variation.price,
+                    salePrice: variation.salePrice,
+                    maxLines: 1,
+                  );
+                }
+              }),
+            ),
+            const SizedBox(width: 8),
+
+            /// SEPET KONTROLLERİ
+            Expanded(
+              flex: 3,
+              child: Obx(() {
+                final isVariable =
+                    product.productType == ProductType.variable.toString();
+                final variation =
+                    controller.variationController.selectedVariation.value;
+
+                final availableStock = isVariable
+                    ? (variation.id.isNotEmpty ? variation.stock : 0)
+                    : product.stock;
+
+                final isInStock = availableStock > 0;
+
+                if (!isInStock) {
+                  return SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: null,
+                      child: Text(
+                        'Stokta Yok',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .apply(color: ProjectColors.whiteColor),
                       ),
-                      CircularIcon(
-                          icon: Iconsax.add,
-                          onPressed: () =>
-                              controller.productQuantityInCart.value += 1)
-                    ],
+                    ),
+                  );
+                }
+
+                return Expanded(
+                  flex: 3,
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        controller.productQuantityInCart.value = 1;
+                        controller.addToCart(product);
+                      },
+                      child: Text(
+                        'Sepete Ekle',
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .apply(color: ProjectColors.whiteColor),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(
-                width: DeviceUtility.getScreenWidth(context) * 0.5,
-                child: ElevatedButton(
-                  onPressed: controller.productQuantityInCart.value < 1
-                      ? null
-                      : () => controller.addToCart(product),
-                  child: Text('Sepete Ekle',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .apply(color: ProjectColors.whiteColor)),
-                ),
-              ),
-            ],
-          ),
+                );
+              }),
+            ),
+          ],
         ),
       ),
     );

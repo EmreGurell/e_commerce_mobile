@@ -1,6 +1,6 @@
 import 'package:tarhanaciyasarmobil/features/authentication/screens/password_configuration/forget_password.dart';
 import 'package:tarhanaciyasarmobil/features/authentication/screens/signup/signup.dart';
-import 'package:tarhanaciyasarmobil/features/controllers/login/login_controller.dart';
+import 'package:tarhanaciyasarmobil/features/authentication/controllers/login/login_controller.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/texts.dart';
 import 'package:tarhanaciyasarmobil/utils/validators/validator.dart';

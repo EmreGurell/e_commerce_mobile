@@ -11,23 +11,26 @@ class MyAppbar extends StatelessWidget implements PreferredSizeWidget {
       {super.key,
       this.title,
       this.showBackArrow = false,
-      this.leadingIcon,
+      this.leading,
       this.actions,
       this.leadingOnPressed,
-      this.centerTitle = true});
+      this.centerTitle = true,
+      this.backgroundColor,
+      this.backIconColor = ProjectColors.neutralBlackColor});
 
   final Widget? title;
+  final Color? backgroundColor, backIconColor;
   final bool showBackArrow;
-  final IconData? leadingIcon;
+  final Widget? leading;
   final List<Widget>? actions;
   final VoidCallback? leadingOnPressed;
   final bool? centerTitle;
   @override
   Widget build(BuildContext context) {
-    final isDark = HelperFuctions.isDarkMode(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: ProjectSizes.pagePadding),
       child: AppBar(
+        backgroundColor: backgroundColor,
         centerTitle: centerTitle,
         automaticallyImplyLeading: false,
         leading: showBackArrow
@@ -35,14 +38,9 @@ class MyAppbar extends StatelessWidget implements PreferredSizeWidget {
                 onPressed: () => Get.back(),
                 icon: Icon(
                   Iconsax.arrow_left,
-                  color: isDark
-                      ? ProjectColors.whiteColor
-                      : ProjectColors.neutralBlackColor,
+                  color: backIconColor,
                 ))
-            : leadingIcon != null
-                ? IconButton(
-                    onPressed: () => leadingOnPressed, icon: Icon(leadingIcon))
-                : null,
+            : leading ?? leading,
         title: title,
         actions: actions,
       ),

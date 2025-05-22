@@ -5,6 +5,7 @@ import 'package:tarhanaciyasarmobil/features/shop/screens/wishlist/wishlist.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
 
 class NavigationMenu extends StatelessWidget {
   NavigationMenu({super.key});
@@ -14,6 +15,7 @@ class NavigationMenu extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: Obx(
         () => NavigationBar(
+          indicatorColor: ProjectColors.greenColor.withOpacity(.1),
           height: 80,
           elevation: 0,
           selectedIndex: controller.selectedIndex.value,

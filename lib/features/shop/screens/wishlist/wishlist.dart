@@ -5,7 +5,7 @@ import 'package:tarhanaciyasarmobil/common/widgets/loaders/animation_loaders.dar
 import 'package:tarhanaciyasarmobil/common/widgets/products/product_cards/product_card_vertical.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/shimmer/vertical_product_shimmer.dart';
 import 'package:tarhanaciyasarmobil/features/shop/controllers/product/favourites_controller.dart';
-import 'package:tarhanaciyasarmobil/features/shop/screens/home/home.dart';
+import 'package:tarhanaciyasarmobil/navigation_menu.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/image_paths.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/texts.dart';
@@ -19,6 +19,7 @@ class Wishlist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(NavigationController());
     final controller = Get.put(FavouritesController());
     return Scaffold(
       appBar: MyAppbar(
@@ -29,7 +30,9 @@ class Wishlist extends StatelessWidget {
         ),
         actions: [
           CircularIcon(
-              icon: Iconsax.add, onPressed: () => Get.to(const HomeScreen()))
+              icon: Iconsax.shopping_cart,
+              onPressed: () => Get.offAll(
+                  transition: Transition.leftToRight, NavigationMenu()))
         ],
       ),
       body: SingleChildScrollView(
@@ -41,8 +44,14 @@ class Wishlist extends StatelessWidget {
                   future: controller.favoriteProducts(),
                   builder: (context, snapshot) {
                     final emptyWidget = AnimationLoaderWidget(
-                        text: 'İstek Listesi boş',
-                        animation: ImagePaths.docerAnimation,
+                        text:
+                            'Beğendiğiniz ürünleri kaybetmeden önce hemen favorilere ekleyin!',
+                        actionText: 'Ürünleri Keşfet',
+                        onActionPressed: () {
+                          final navController = Get.put(NavigationController());
+                          navController.selectedIndex.value = 0;
+                        },
+                        animation: ImagePaths.cartAnimation,
                         showAction: true);
                     const loader = VerticalProductShimmer(
                       itemCount: 6,
@@ -51,7 +60,7 @@ class Wishlist extends StatelessWidget {
                         snapshot: snapshot,
                         loader: loader,
                         nothingFound: emptyWidget);
-                    if (widget != null) return widget;
+                    if (widget != null) return emptyWidget;
                     final products = snapshot.data!;
                     return GridLayout(
                         itemCount: products.length,

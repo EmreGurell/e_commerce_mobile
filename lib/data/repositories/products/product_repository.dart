@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tarhanaciyasarmobil/data/services/firebase_storage_service.dart';
 import 'package:tarhanaciyasarmobil/features/shop/models/product_model.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/enums.dart';
 import 'package:tarhanaciyasarmobil/utils/exceptions/exceptions.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,6 +8,7 @@ class ProductRepository extends GetxController {
   static ProductRepository get instance => Get.find();
 
   final _db = FirebaseFirestore.instance;
+  CollectionReference get _productsCollection => _db.collection('Products');
 
   Future<List<ProductModel>> getFeaturedProducts() async {
     try {
@@ -18,7 +17,28 @@ class ProductRepository extends GetxController {
           .where('isFeatured', isEqualTo: true)
           .limit(4)
           .get();
-      return snapshot.docs.map((e) => ProductModel.fromSnapshot(e)).toList();
+      return snapshot.docs
+          .map((e) => ProductModel.fromQuerySnapshot(e))
+          .toList();
+    } on FirebaseException catch (e) {
+      throw MyFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const MyFormatException().message;
+    } on PlatformException catch (e) {
+      throw MyPlatformException(e.code).message;
+    } catch (e, stackTrace) {
+      print('$e');
+      print(stackTrace);
+      throw 'Bir şeyler ters gitti. Lütfen tekrar deneyiniz.';
+    }
+  }
+
+  Future<List<ProductModel>> getAllProducts() async {
+    try {
+      final snapshot = await _db.collection('Products').get();
+      return snapshot.docs
+          .map((e) => ProductModel.fromQuerySnapshot(e))
+          .toList();
     } on FirebaseException catch (e) {
       throw MyFirebaseException(e.code).message;
     } on FormatException catch (_) {
@@ -30,13 +50,51 @@ class ProductRepository extends GetxController {
     }
   }
 
+  Future<PaginatedProducts> getProductsPaginated({
+    DocumentSnapshot? lastDocument,
+    int limit = 5,
+    String? searchText,
+  }) async {
+    Query query = _db
+        .collection('Products')
+        .orderBy('title', descending: true)
+        .limit(limit);
+
+    // Arama varsa başlık bazlı arama yap
+    if (searchText != null && searchText.isNotEmpty) {
+      query = query
+          .where('title', isGreaterThanOrEqualTo: searchText)
+          .where('title', isLessThanOrEqualTo: '$searchText\uf8ff');
+    }
+
+    // Son çekilen dokümandan devam et
+    if (lastDocument != null) {
+      query = query.startAfterDocument(lastDocument);
+    }
+
+    final snapshot = await query.get();
+
+    final products = snapshot.docs.map((doc) {
+      final product = ProductModel.fromQuerySnapshot(doc);
+      product.originalDoc = doc;
+      return product;
+    }).toList();
+
+    return PaginatedProducts(
+      products: products,
+      lastDocument: snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
+    );
+  }
+
   Future<List<ProductModel>> getAllFeaturedProducts() async {
     try {
       final snapshot = await _db
           .collection('Products')
           .where('isFeatured', isEqualTo: true)
           .get();
-      return snapshot.docs.map((e) => ProductModel.fromSnapshot(e)).toList();
+      return snapshot.docs
+          .map((e) => ProductModel.fromQuerySnapshot(e))
+          .toList();
     } on FirebaseException catch (e) {
       throw MyFirebaseException(e.code).message;
     } on FormatException catch (_) {
@@ -66,15 +124,25 @@ class ProductRepository extends GetxController {
     }
   }
 
+  Future<List<ProductModel>> searchByTitle(String searchTerm) async {
+    final query = _productsCollection
+        .where('title', isGreaterThanOrEqualTo: searchTerm)
+        .where('title', isLessThanOrEqualTo: '$searchTerm\uf8ff');
+
+    return await fetchProductsByQuery(query);
+  }
+
   Future<List<ProductModel>> getFavouriteProducts(
       List<String> productIds) async {
     try {
+      if (productIds.isEmpty) return []; // Boş liste kontrolü eklendi
+
       final snapshot = await _db
           .collection('Products')
           .where(FieldPath.documentId, whereIn: productIds)
           .get();
       return snapshot.docs
-          .map((querySnapshot) => ProductModel.fromSnapshot(querySnapshot))
+          .map((querySnapshot) => ProductModel.fromQuerySnapshot(querySnapshot))
           .toList();
     } on FirebaseException catch (e) {
       throw MyFirebaseException(e.code).message;
@@ -101,7 +169,7 @@ class ProductRepository extends GetxController {
               .limit(limit)
               .get();
       final products = querySnapshot.docs
-          .map((doc) => ProductModel.fromSnapshot(doc))
+          .map((doc) => ProductModel.fromQuerySnapshot(doc))
           .toList();
       return products;
     } on FirebaseException catch (e) {
@@ -115,16 +183,18 @@ class ProductRepository extends GetxController {
     }
   }
 
-  Future<List<ProductModel>> getProductsForCategory(
-      {required String categoryId, int limit = -1}) async {
+  Future<List<ProductModel>> getProductsForCategory({
+    required String categoryId,
+    int limit = -1,
+  }) async {
     try {
       final productCategoryQuery = limit == -1
           ? await _db
-              .collection('ProductsCategory')
+              .collection('ProductCategory')
               .where('categoryId', isEqualTo: categoryId)
               .get()
           : await _db
-              .collection('ProductsCategory')
+              .collection('ProductCategory')
               .where('categoryId', isEqualTo: categoryId)
               .limit(limit)
               .get();
@@ -133,13 +203,15 @@ class ProductRepository extends GetxController {
           .map((doc) => doc['productId'] as String)
           .toList();
 
+      if (productIds.isEmpty) return []; // Boşsa direkt dön
+
       final productsQuery = await _db
           .collection('Products')
           .where(FieldPath.documentId, whereIn: productIds)
           .get();
 
       List<ProductModel> products = productsQuery.docs
-          .map((doc) => ProductModel.fromSnapshot(doc))
+          .map((doc) => ProductModel.fromQuerySnapshot(doc))
           .toList();
       return products;
     } on FirebaseException catch (e) {
@@ -152,60 +224,11 @@ class ProductRepository extends GetxController {
       throw 'Bir şeyler ters gitti. Lütfen tekrar deneyiniz.';
     }
   }
+}
 
-  Future<void> uploadDummyData(List<ProductModel> products) async {
-    try {
-      // Upload all the products along with their images
-      final storage = Get.put(FirebaseStorageService());
+class PaginatedProducts {
+  final List<ProductModel> products;
+  final DocumentSnapshot? lastDocument;
 
-      // Loop through each product
-      for (var product in products) {
-        // Get image data link from local assets
-        final thumbnail =
-            await storage.getImageDataFromAssets(product.thumbnail);
-
-        // Upload image and get its URL
-        final url = await storage.uploadImageData(
-            'Products/images', thumbnail, product.thumbnail.toString());
-
-        // Assign URL to product.thumbnail attribute
-        product.thumbnail = url;
-
-        // Product list of images
-        if (product.images != null && product.images!.isNotEmpty) {
-          List<String> imagesUrl = [];
-
-          for (var image in product.images!) {
-            // Get image data link from local assets
-            final assetImage = await storage.getImageDataFromAssets(image);
-
-            // Upload image and get its URL
-            final url = await storage.uploadImageData(
-                'Products/images', assetImage, image);
-
-            // Assign URL to product.thumbnail attribute
-            imagesUrl.add(url);
-          }
-
-          product.images!.clear();
-          product.images!.addAll(imagesUrl);
-        }
-        if (product.productType == ProductType.variable.toString()) {
-          for (var variation in product.productVariations!) {
-            // Get image data link from local assets
-
-            final assetImage =
-                await storage.getImageDataFromAssets(variation.image);
-
-            final url = await storage.uploadImageData(
-                'Products/images', assetImage, variation.image);
-            variation.image = url;
-          }
-        }
-        await _db.collection("Products").doc(product.id).set(product.toJson());
-      }
-    } catch (e) {
-      throw e.toString();
-    }
-  }
+  PaginatedProducts({required this.products, required this.lastDocument});
 }

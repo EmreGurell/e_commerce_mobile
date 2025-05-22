@@ -23,17 +23,13 @@ class CategoryTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = CategoryController.instance;
     return ListView(
-        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         children: [
           Padding(
-            padding: const EdgeInsets.all(ProjectSizes.pagePadding),
+            padding: const EdgeInsets.symmetric(vertical:ProjectSizes.pagePadding),
             child: Column(
               children: [
-                CategoryBrands(category: category),
-                SizedBox(
-                  height: ProjectSizes.spaceBtwItems,
-                ),
+
                 FutureBuilder(
                     future:
                         controller.getCategoryProducts(categoryId: category.id),
@@ -48,24 +44,30 @@ class CategoryTab extends StatelessWidget {
                       return Column(
                         children: [
                           SectionHeading(
-                            title: 'En Çok Satan Ürünler',
+                            title: 'İlginizi Çekebilir',
                             buttonTitle: ProjectTexts.viewAllProducts,
                             onPressed: () => Get.to(AllProducts(
                               title: category.name,
                               futureMethod: controller.getCategoryProducts(
-                                  categoryId: category.id, limit: -1),
+                                  categoryId: category.id, limit: 4),
                             )),
                             showActionButton: true,
                           ),
                           const SizedBox(height: ProjectSizes.spaceBtwItems),
-                          GridLayout(
-                              itemCount: products.length,
-                              itemBuilder: (_, index) =>
-                                  ProductCardVertical(product: products[index]))
+                          Padding(
+                            padding: const EdgeInsets.all(ProjectSizes.pagePadding),
+                            child: GridLayout(
+                                itemCount: products.length,
+                                itemBuilder: (_, index) =>
+                                    ProductCardVertical(product: products[index])),
+                          )
                         ],
                       );
                     }),
-              ],
+                CategoryBrands(category: category),
+                SizedBox(
+                  height: ProjectSizes.spaceBtwItems,
+                ), ],
             ),
           ),
         ]);

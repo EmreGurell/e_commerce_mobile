@@ -7,12 +7,56 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:876084334075:android:7155c94ca7f1cc553d8f5e",
+        "android_client_info": {
+          "package_name": "com.example.tarhanaci_yasar_admin_panel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "876084334075-uhpku60ulh896ivtb1vqm6jo9nc8u93o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMHadd1_0rCPjQ0vGRPC2BnvqFWfgo7AI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "876084334075-uhpku60ulh896ivtb1vqm6jo9nc8u93o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "876084334075-bar9le4l5bibq9iucj0rd6cki2r14e0d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.eCommerce"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:876084334075:android:ba82deb05c937e323d8f5e",
         "android_client_info": {
           "package_name": "com.example.tarhanaciyasarmobil"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "876084334075-fosgg216ov5m7mdotf1pb3hr77fm60rr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tarhanaciyasarmobil",
+            "certificate_hash": "6e66492acf709b94472875610ae1386cf66a58b5"
+          }
+        },
         {
           "client_id": "876084334075-uhpku60ulh896ivtb1vqm6jo9nc8u93o.apps.googleusercontent.com",
           "client_type": 3

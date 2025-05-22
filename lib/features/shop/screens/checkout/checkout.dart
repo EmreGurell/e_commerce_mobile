@@ -30,35 +30,43 @@ class CheckoutScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(ProjectSizes.pagePadding),
+          padding: const EdgeInsets.all(ProjectSizes.pagePadding),
           child: Column(
             children: [
-              CartItems(
-                showAddRemoveButtons: false,
-              ),
-              SizedBox(height: ProjectSizes.spaceBtwItems * 2),
-              PromoCode(),
-              SizedBox(height: ProjectSizes.spaceBtwItems * 2),
+              const RoundedContainer(
+                  backgroundColor: Colors.transparent,
+                  height: 175,
+                  child: CartItems(
+                    dismissable: false,
+                    showAddRemoveButtons: false,
+                  )),
+              const SizedBox(height: ProjectSizes.spaceBtwItems * 2),
+              const PromoCode(),
+              const SizedBox(height: ProjectSizes.spaceBtwItems * 2),
               RoundedContainer(
+                borderColor: Theme.of(context).primaryColor,
                 backgroundColor: Colors.transparent,
                 showBorder: true,
-                padding: EdgeInsets.all(ProjectSizes.small * 2),
-                child: Column(
+                padding: const EdgeInsets.only(
+                    top: ProjectSizes.small * 2,
+                    left: ProjectSizes.small * 2,
+                    right: ProjectSizes.small * 2),
+                child: const Column(
                   children: [
                     BillingAmountSection(),
                     Divider(),
                     SizedBox(
-                      height: ProjectSizes.spaceBtwItems,
+                      height: ProjectSizes.spaceBtwItems / 4,
                     ),
                     BillingPaymentSection(),
                     SizedBox(
-                      height: ProjectSizes.spaceBtwItems,
+                      height: ProjectSizes.spaceBtwItems / 2,
                     ),
                     Divider(),
                     SizedBox(
-                      height: ProjectSizes.spaceBtwItems,
+                      height: ProjectSizes.spaceBtwItems / 2,
                     ),
                     BillingAddressSection(),
                   ],
@@ -78,7 +86,7 @@ class CheckoutScreen extends StatelessWidget {
                     message:
                         'Sipariş verebilmek için ürünleri sepetinize ekleyiniz.'),
             child: Text(
-                'Tutar \$${PricingCalculator.calculateTotalPrice(subTotal, 'TR')}')),
+                'Tutar ${PricingCalculator.calculateTotalPrice(subTotal, 'TR')} TL')),
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'package:tarhanaciyasarmobil/features/authentication/screens/signup/widge
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:tarhanaciyasarmobil/features/controllers/signup/signup_controller.dart';
+import 'package:tarhanaciyasarmobil/features/authentication/controllers/signup/signup_controller.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/texts.dart';
 import 'package:tarhanaciyasarmobil/utils/validators/validator.dart';
@@ -23,6 +23,7 @@ class SignupForm extends StatelessWidget {
             children: [
               Expanded(
                 child: TextFormField(
+                  textInputAction: TextInputAction.next,
                   controller: controller.firstName,
                   validator: (value) =>
                       Validator.validateEmptyText('Ad', value),
@@ -34,6 +35,7 @@ class SignupForm extends StatelessWidget {
               const SizedBox(width: ProjectSizes.spaceBtwItems),
               Expanded(
                 child: TextFormField(
+                  textInputAction: TextInputAction.next,
                   controller: controller.lastName,
                   validator: (value) =>
                       Validator.validateEmptyText('Soyad', value),
@@ -48,6 +50,7 @@ class SignupForm extends StatelessWidget {
 
           // Email
           TextFormField(
+            textInputAction: TextInputAction.next,
             controller: controller.email,
             validator: (value) => Validator.validateEmail(value),
             decoration: const InputDecoration(
@@ -58,10 +61,12 @@ class SignupForm extends StatelessWidget {
 
           // Phone Number
           TextFormField(
+            textInputAction: TextInputAction.next,
             keyboardType: TextInputType.phone,
             controller: controller.phoneNumber,
             validator: (value) => Validator.validatePhoneNumber(value),
             decoration: const InputDecoration(
+                hintText: ProjectTexts.phoneNumberHint,
                 prefixIcon: Icon(Iconsax.call),
                 labelText: ProjectTexts.phoneNumber),
           ),
@@ -69,6 +74,7 @@ class SignupForm extends StatelessWidget {
 
           // Password
           Obx(() => TextFormField(
+                textInputAction: TextInputAction.next,
                 controller: controller.password,
                 validator: (value) => Validator.validatePassword(value),
                 obscureText: controller.hidePassword.value,
@@ -88,6 +94,7 @@ class SignupForm extends StatelessWidget {
 
           // Password-Check
           Obx(() => TextFormField(
+                textInputAction: TextInputAction.next,
                 controller: controller.passwordCheck,
                 validator: (value) =>
                     Validator.validateEmptyText('Şifre kontrolü', value),

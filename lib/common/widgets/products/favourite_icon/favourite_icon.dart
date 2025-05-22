@@ -9,13 +9,18 @@ class FavouriteIcon extends StatelessWidget {
   const FavouriteIcon({
     super.key,
     required this.productId,
+    this.backgroundColor,
   });
   final String productId;
+  final Color? backgroundColor;
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(FavouritesController());
     return Obx(
       () => CircularIcon(
+          backgroundColor: backgroundColor,
+          width: 45,
+          height: 45,
           color:
               controller.isFavourite(productId) ? ProjectColors.redColor : null,
           icon: controller.isFavourite(productId)

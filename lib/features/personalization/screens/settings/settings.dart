@@ -4,6 +4,7 @@ import 'package:tarhanaciyasarmobil/common/widgets/list_tiles/settings_menu_list
 import 'package:tarhanaciyasarmobil/common/widgets/list_tiles/user_profile_list_tile.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/texts/section_heading.dart';
 import 'package:tarhanaciyasarmobil/data/repositories/authentication/authentication_repository.dart';
+import 'package:tarhanaciyasarmobil/features/personalization/controllers/user_controller.dart';
 import 'package:tarhanaciyasarmobil/features/personalization/screens/address/address_page.dart';
 import 'package:tarhanaciyasarmobil/features/personalization/screens/profile/profile.dart';
 import 'package:tarhanaciyasarmobil/features/shop/screens/order/order.dart';
@@ -14,11 +15,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../shop/screens/cart/cart.dart';
+
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Get.put(UserController());
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -56,7 +60,8 @@ class SettingsScreen extends StatelessWidget {
                     icon: Iconsax.shopping_cart,
                     title: 'Sepetim',
                     subtitle: 'Sepeti görüntüle',
-                    onTap: () {},
+                    onTap: () => Get.to(
+                        transition: Transition.leftToRight, const CartScreen()),
                   ),
                   SettingsMenuListTile(
                     icon: Iconsax.bag_tick,
@@ -82,6 +87,7 @@ class SettingsScreen extends StatelessWidget {
                     subtitle: 'Mesajları görüntüle',
                     onTap: () {},
                   ),
+                  /* 
                   SettingsMenuListTile(
                     icon: Iconsax.security,
                     title: 'Hesap Gizliliği',
@@ -106,7 +112,7 @@ class SettingsScreen extends StatelessWidget {
                       value: true,
                       onChanged: (value) {},
                     ),
-                  ),
+                  ),*/
                   const SizedBox(
                     height: ProjectSizes.spaceBtwItems,
                   ),

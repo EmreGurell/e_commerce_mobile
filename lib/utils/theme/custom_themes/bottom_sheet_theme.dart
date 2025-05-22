@@ -8,8 +8,8 @@ class CustomBottomSheetTheme {
 
   static final lightBottomSheetThemeTheme = BottomSheetThemeData(
       showDragHandle: true,
-      backgroundColor: ProjectColors.whiteColor,
-      modalBackgroundColor: ProjectColors.whiteColor,
+      backgroundColor: ProjectColors.scaffoldLight,
+      modalBackgroundColor: ProjectColors.scaffoldLight,
       constraints: const BoxConstraints(minWidth: double.infinity),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(

@@ -1,3 +1,5 @@
+import 'package:iconsax/iconsax.dart';
+import 'package:tarhanaciyasarmobil/common/widgets/dialogs/dialogs.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/loaders/loaders.dart';
 import 'package:tarhanaciyasarmobil/data/repositories/authentication/authentication_repository.dart';
 import 'package:tarhanaciyasarmobil/data/repositories/user/user_repository.dart';
@@ -70,24 +72,16 @@ class UserController extends GetxController {
   }
 
   void deleteAccountWarningPopup() {
-    Get.defaultDialog(
-        contentPadding: const EdgeInsets.all(ProjectSizes.pagePadding),
-        title: 'Hesabını sil',
-        middleText:
-            'Hesabını silmek istediğine emin misin? Tüm verilerin kaybolacak',
-        cancel: OutlinedButton(
-            onPressed: () => Navigator.of(Get.overlayContext!).pop(),
-            child: const Text('İptal Et')),
-        confirm: ElevatedButton(
-          onPressed: () async => deleteUserAccount(),
-          style: ElevatedButton.styleFrom(
-              backgroundColor: ProjectColors.redColor,
-              side: const BorderSide(color: ProjectColors.redColor)),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: ProjectSizes.lg),
-            child: Text('Sil'),
-          ),
-        ));
+    ConfirmationDialog.show(
+      iconColor: ProjectColors.redColor,
+      icon: Iconsax.warning_2,
+      title: 'Hesabını sil',
+      context: Get.context!,
+      content:
+          'Hesabını silmek istediğine emin misin? Tüm verilerin kaybolacak',
+      onCancel: () => Get.back(),
+      onConfirm: () async => deleteUserAccount(),
+    );
   }
 
   void deleteUserAccount() async {

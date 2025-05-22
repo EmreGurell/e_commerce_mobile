@@ -23,36 +23,39 @@ class AnimationLoaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Lottie.asset(animation,
-              width: DeviceUtility.getScreenWidth(context) * .8),
-          const SizedBox(height: ProjectSizes.pagePadding),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: ProjectSizes.pagePadding),
-          if (showAction)
-            SizedBox(
-              width: 250,
-              child: OutlinedButton(
-                onPressed: onActionPressed,
-                style: OutlinedButton.styleFrom(
-                  backgroundColor: ProjectColors.neutralBlackColor,
-                ),
-                child: Text(
-                  actionText ?? 'Tamam',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .apply(color: ProjectColors.whiteColor),
+      child: Padding(
+        padding: const EdgeInsets.all(ProjectSizes.pagePadding),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Lottie.asset(animation,
+                width: DeviceUtility.getScreenWidth(context) * .8),
+            const SizedBox(height: ProjectSizes.spaceBtwItems*2),
+            Text(
+              text,
+              style: Theme.of(context).textTheme.headlineSmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: ProjectSizes.pagePadding),
+            if (showAction)
+              SizedBox(height: ProjectSizes.spaceBtwItems*2),
+            if (showAction)
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: onActionPressed,
+
+                  child: Text(
+                    actionText ?? 'Tamam',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium!
+                        .apply(color: ProjectColors.whiteColor),
+                  ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

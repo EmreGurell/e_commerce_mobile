@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tarhanaciyasarmobil/utils/constants/enums.dart';
 
 class HelperFuctions {
   // static Color? getColor(String value) {}
@@ -62,6 +63,22 @@ class HelperFuctions {
     return list.toSet().toList();
   }
 
+  static Color getOrderStatusColor(OrderStatus value) {
+    if (OrderStatus.pending == value) {
+      return Colors.blue;
+    } else if (OrderStatus.processing == value) {
+      return Colors.orange;
+    } else if (OrderStatus.shipped == value) {
+      return Colors.purple;
+    } else if (OrderStatus.delivered == value) {
+      return Colors.green;
+    } else if (OrderStatus.cancelled == value) {
+      return Colors.red;
+    } else {
+      return Colors.grey;
+    }
+  }
+
   static List<Widget> wrapWidgets(List<Widget> widgets, int rowSize) {
     final wrappedList = <Widget>[];
     for (var i = 0; i < widgets.length; i += rowSize) {
@@ -72,5 +89,30 @@ class HelperFuctions {
       ));
     }
     return wrappedList;
+  }
+
+  static Color? getColor(String text) {
+    switch (text.toLowerCase()) {
+      case 'kırmızı':
+        return Colors.red;
+      case 'yeşil':
+        return Colors.green;
+      case 'mavi':
+        return Colors.blue;
+      case 'sarı':
+        return Colors.yellow;
+      case 'siyah':
+        return Colors.black;
+      case 'beyaz':
+        return Colors.white;
+      case 'mor':
+        return Colors.purple;
+      case 'turuncu':
+        return Colors.orange;
+      case 'gri':
+        return Colors.grey;
+      default:
+        return null; // tanımsızsa renkli chip olarak gösterilmez
+    }
   }
 }

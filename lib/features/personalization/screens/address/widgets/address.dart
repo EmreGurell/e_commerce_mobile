@@ -13,74 +13,84 @@ class SingleAddress extends StatelessWidget {
     super.key,
     required this.address,
     required this.onTap,
+    required this.onDismissed, // yeni eklendi
   });
+
   final AddressModel address;
   final VoidCallback onTap;
+  final DismissDirectionCallback onDismissed; // yeni eklendi
+
   @override
   Widget build(BuildContext context) {
     final controller = AddressController.instance;
     final isDark = HelperFuctions.isDarkMode(context);
+
     return Obx(() {
       final selectedAddressId = controller.selectedAddress.value.id;
       final selectedAddress = selectedAddressId == address.id;
-      return InkWell(
-        onTap: onTap,
-        child: RoundedContainer(
-          padding: const EdgeInsets.all(ProjectSizes.pagePadding),
-          width: double.infinity,
-          showBorder: true,
-          backgroundColor: address.selectedAddress
-              ? ProjectColors.blueColor.withOpacity(.3)
-              : Colors.transparent,
-          borderColor: address.selectedAddress
-              ? Colors.transparent
-              : isDark
-                  ? ProjectColors.grayColor
-                  : ProjectColors.gray4Color,
-          margin: const EdgeInsets.only(bottom: ProjectSizes.spaceBtwItems),
-          child: Stack(
-            children: [
-              Positioned(
-                right: 5,
-                top: 0,
-                child: Icon(
-                    address.selectedAddress ? Iconsax.tick_circle5 : null,
-                    color: address.selectedAddress
-                        ? isDark
-                            ? ProjectColors.whiteColor
-                            : ProjectColors.neutralBlackColor.withOpacity(.6)
-                        : null),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    address.name,
-                    style: Theme.of(context).textTheme.titleLarge,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+
+      return Dismissible(
+        key: ValueKey(address.id),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          color: Colors.red,
+          child: const Icon(Icons.delete, color: Colors.white),
+        ),
+        onDismissed: onDismissed,
+        child: InkWell(
+          onTap: onTap,
+          child: RoundedContainer(
+            padding: const EdgeInsets.all(ProjectSizes.pagePadding),
+            width: double.infinity,
+            showBorder: true,
+            backgroundColor: selectedAddress ? Colors.white : Colors.transparent,
+            borderColor: selectedAddress
+                ? Colors.transparent
+                : isDark
+                ? ProjectColors.grayColor
+                : ProjectColors.gray4Color,
+            margin: const EdgeInsets.only(bottom: ProjectSizes.spaceBtwItems),
+            child: Stack(
+              children: [
+                if (selectedAddress)
+                  const Positioned(
+                    right: 5,
+                    top: 0,
+                    child: Icon(
+                      Iconsax.tick_circle5,
+                      color: ProjectColors.green2Color,
+                    ),
                   ),
-                  const SizedBox(
-                    height: ProjectSizes.spaceBtwItems / 2,
-                  ),
-                  Text(
-                    address.formattedPhoneNo,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  const SizedBox(
-                    height: ProjectSizes.spaceBtwItems / 2,
-                  ),
-                  Text(
-                    address.toString(),
-                    softWrap: true,
-                  ),
-                ],
-              )
-            ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      address.name,
+                      style: Theme.of(context).textTheme.titleLarge!.apply(fontFamily: 'Poppins'),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    const SizedBox(height: ProjectSizes.spaceBtwItems / 2),
+                    Text(
+                      address.formattedPhoneNo,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    const SizedBox(height: ProjectSizes.spaceBtwItems / 2),
+                    Text(
+                      address.toString(),
+                      softWrap: true,
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       );
     });
   }
 }
+

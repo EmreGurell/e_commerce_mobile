@@ -10,8 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AllProducts extends StatelessWidget {
-  const AllProducts(
-      {super.key, required this.title, this.query, this.futureMethod});
+  const AllProducts({
+    super.key,
+    required this.title,
+    this.query,
+    this.futureMethod,
+  });
 
   final String title;
   final Query? query;
@@ -19,9 +23,11 @@ class AllProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AllProductsController());
+    // Controller'ı yalnızca bir kez oluştur
+    final controller = Get.put(AllProductsController(), permanent: true);
+
     return Scaffold(
-      appBar: MyAppbar(
+      appBar: MyAppbar(showBackArrow: true,
         title: Text(
           title,
           style: Theme.of(context).textTheme.headlineMedium,
@@ -30,19 +36,27 @@ class AllProducts extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(ProjectSizes.pagePadding),
-          child: FutureBuilder(
-              future: futureMethod ?? controller.fetchProductByQuery(query),
-              builder: (context, snapshot) {
-                const loader = VerticalProductShimmer();
-                final widget = CloudHelperFunctions.checkMultiRecordState(
-                    snapshot: snapshot, loader: loader);
+          child: FutureBuilder<List<ProductModel>>(
+            future: futureMethod ?? controller.fetchProductByQuery(query),
+            builder: (context, snapshot) {
+              const loader = VerticalProductShimmer();
+              final widget = CloudHelperFunctions.checkMultiRecordState(
+                snapshot: snapshot,
+                loader: loader,
+              );
 
-                if (widget != null) return widget;
-                final products = snapshot.data!;
-                return SortableProducts(
-                  products: products,
-                );
-              }),
+              if (widget != null) return widget;
+
+              final products = snapshot.data ?? [];
+
+              // Ürünler geldikten sonra controller'a atanıyor
+              controller.assignProducts(products);
+
+              return SortableProducts(
+                products: products,
+              );
+            },
+          ),
         ),
       ),
     );

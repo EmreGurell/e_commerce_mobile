@@ -14,7 +14,7 @@ class PromoCode extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isDark = HelperFuctions.isDarkMode(context);
 
-    return RoundedContainer(
+    return RoundedContainer(borderColor: Theme.of(context).primaryColor,
       backgroundColor:
           isDark ? ProjectColors.neutralBlackColor : ProjectColors.whiteColor,
       showBorder: true,
@@ -43,7 +43,7 @@ class PromoCode extends StatelessWidget {
                 backgroundColor: Colors.grey.withOpacity(0.2),
                 side: BorderSide(color: Colors.grey.withOpacity(0.1)),
               ),
-              child: const Text('Apply'),
+              child: const Text('Uygula'),
             ),
           )
         ],

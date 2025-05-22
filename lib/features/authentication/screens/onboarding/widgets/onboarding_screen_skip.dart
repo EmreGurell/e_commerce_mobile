@@ -1,4 +1,4 @@
-import 'package:tarhanaciyasarmobil/features/controllers/onboarding/onboarding_controller.dart';
+import 'package:tarhanaciyasarmobil/features/authentication/controllers/onboarding/onboarding_controller.dart';
 import 'package:tarhanaciyasarmobil/utils/device/device_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';

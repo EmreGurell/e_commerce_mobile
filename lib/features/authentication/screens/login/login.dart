@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:tarhanaciyasarmobil/common/styles/spacing_styles.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/login_signup_widgets/custom_divider.dart';
 import 'package:tarhanaciyasarmobil/features/authentication/screens/login/widgets/login_form.dart';
@@ -5,6 +6,8 @@ import 'package:tarhanaciyasarmobil/features/authentication/screens/login/widget
 import 'package:tarhanaciyasarmobil/common/widgets/login_signup_widgets/social_media_buttons.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../utils/constants/texts.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -15,15 +18,15 @@ class LoginScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: SpacingStyles.paddingWithAppbarHeight,
-          child: const Column(
+          child: Column(
             children: [
-              LoginHeader(),
-              LoginForm(),
-              CustomDivider(),
-              SizedBox(
+              const LoginHeader(),
+              const LoginForm(),
+              CustomDivider(text: ProjectTexts.orSignInWith.capitalize!),
+              const SizedBox(
                 height: ProjectSizes.spaceBtwItems,
               ),
-              SocialMediaButtons(),
+              const SocialMediaButtons(),
             ],
           ),
         ),

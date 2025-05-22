@@ -1,13 +1,16 @@
 import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/texts.dart';
 import 'package:tarhanaciyasarmobil/utils/helpers/helper_fuctions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class CustomDivider extends StatelessWidget {
   const CustomDivider({
     super.key,
+    required this.text,
+    this.textColor,
   });
+
+  final String text;
+  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +29,9 @@ class CustomDivider extends StatelessWidget {
           ),
         ),
         Text(
-          ProjectTexts.orSignInWith.capitalize!,
-          style: Theme.of(context).textTheme.labelMedium,
+          text,
+          style: Theme.of(context).textTheme.labelMedium!.apply(
+              color: textColor != null ? textColor : ProjectColors.gray3Color),
         ),
         Expanded(
           // Flexible yerine Expanded kullanıldı

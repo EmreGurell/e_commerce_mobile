@@ -1,7 +1,9 @@
+import 'package:lottie/lottie.dart';
 import 'package:tarhanaciyasarmobil/common/styles/spacing_styles.dart';
+import 'package:tarhanaciyasarmobil/utils/constants/image_paths.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/texts.dart';
-import 'package:tarhanaciyasarmobil/utils/helpers/helper_fuctions.dart';
+import 'package:tarhanaciyasarmobil/utils/device/device_utility.dart';
 import 'package:flutter/material.dart';
 
 class SuccessScreen extends StatelessWidget {
@@ -22,18 +24,21 @@ class SuccessScreen extends StatelessWidget {
           padding: SpacingStyles.paddingWithAppbarHeight * 2,
           child: Column(
             children: [
-              Image(
-                image: AssetImage(image),
-                width: HelperFuctions.screenWidth(context) * .6,
-              ),
+              Lottie.asset(
+                  width: DeviceUtility.getScreenWidth(context) * .8,
+                  ImagePaths.orderCompletedAnimation,
+                  reverse: false),
               const SizedBox(
                 height: ProjectSizes.spaceBtwItems * 2,
               ),
 
               //Title & Subtitle
               Text(
-                title,
-                style: Theme.of(context).textTheme.headlineMedium,
+                title.toUpperCase(),
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium!
+                    .apply(fontFamily: 'Poppins'),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(
@@ -43,7 +48,7 @@ class SuccessScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall,
                   textAlign: TextAlign.center),
               const SizedBox(
-                height: ProjectSizes.spaceBtwItems * 2,
+                height: ProjectSizes.spaceBtwItems * 6,
               ),
               SizedBox(
                 width: double.infinity,

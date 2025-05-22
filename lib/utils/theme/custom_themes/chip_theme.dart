@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 
 class CustomChipTheme {
   static ChipThemeData lightChipThemeData = ChipThemeData(
-    disabledColor: ProjectColors.grayColor.withOpacity(.4),
+    disabledColor: ProjectColors.gray3Color.withOpacity(.4),
     labelStyle: const TextStyle(color: Colors.black),
-    selectedColor: ProjectColors.blueColor,
-    padding: EdgeInsets.all(ProjectBorderRadius.ImageAndCardRadius.value()),
+    selectedColor: ProjectColors.green2Color,
+    padding: const EdgeInsets.symmetric(horizontal: 2),
+    showCheckmark: false,
     checkmarkColor: ProjectColors.whiteColor,
   );
   static ChipThemeData darkChipThemeData = ChipThemeData(

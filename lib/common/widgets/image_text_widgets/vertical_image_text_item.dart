@@ -32,9 +32,9 @@ class VerticalImageCategoryItem extends StatelessWidget {
         child: Column(
           children: [
             Container(
+              padding: const EdgeInsets.all(ProjectSizes.IconXS / 2),
               width: 56,
               height: 56,
-              padding: const EdgeInsets.all(ProjectSizes.IconS),
               decoration: BoxDecoration(
                 color: backgroundColor ??
                     (isDark
@@ -44,17 +44,17 @@ class VerticalImageCategoryItem extends StatelessWidget {
               ),
               child: Center(
                 child: RoundedImage(
+                  width: double.infinity,
                   imageUrl: image,
                   isNetworkImage: isNetworkImage,
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.cover,
                   applyImageRadius: true,
-                  borderRadius: 100,
                 ),
               ),
             ),
             const SizedBox(height: ProjectSizes.spaceBtwItems / 2),
             SizedBox(
-              width: 55,
+              width: 56,
               child: Text(
                 title,
                 maxLines: 1,

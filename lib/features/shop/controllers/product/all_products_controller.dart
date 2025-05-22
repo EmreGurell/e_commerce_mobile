@@ -8,7 +8,7 @@ class AllProductsController extends GetxController {
   static AllProductsController get instance => Get.find();
 
   final repository = ProductRepository.instance;
-  final RxString selectedSortOption = 'Name'.obs;
+  final RxString selectedSortOption = 'Ad'.obs;
   final RxList<ProductModel> products = <ProductModel>[].obs;
 
   Future<List<ProductModel>> fetchProductByQuery(Query? query) async {
@@ -31,41 +31,53 @@ class AllProductsController extends GetxController {
       case 'Ad':
         products.sort((a, b) => a.title.compareTo(b.title));
         break;
-      case 'Artan Fiyat':
-        products.sort((a, b) => b.price.compareTo(a.price));
-        break;
 
       case 'Azalan Fiyat':
-        products.sort((a, b) => a.price.compareTo(b.price));
+        products.sort((a, b) {
+          final aPrice = (a.salePrice > 0 && a.salePrice < a.price) ? a.salePrice : a.price;
+          final bPrice = (b.salePrice > 0 && b.salePrice < b.price) ? b.salePrice : b.price;
+          return bPrice.compareTo(aPrice);
+        });
+        break;
 
+      case 'Artan Fiyat':
+        products.sort((a, b) {
+          final aPrice = (a.salePrice > 0 && a.salePrice < a.price) ? a.salePrice : a.price;
+          final bPrice = (b.salePrice > 0 && b.salePrice < b.price) ? b.salePrice : b.price;
+          return aPrice.compareTo(bPrice);
+        });
         break;
 
       case 'İndirim':
         products.sort((a, b) {
-          if (b.salePrice > 0) {
-            return b.salePrice.compareTo(a.salePrice);
-          } else if (a.salePrice > 0) {
+          final aHasDiscount = a.salePrice > 0 && a.salePrice < a.price;
+          final bHasDiscount = b.salePrice > 0 && b.salePrice < b.price;
+
+          if (aHasDiscount && bHasDiscount) {
+            return a.salePrice.compareTo(b.salePrice); // küçükten büyüğe
+          } else if (aHasDiscount) {
             return -1;
-          } else {
+          } else if (bHasDiscount) {
             return 1;
+          } else {
+            return 0;
           }
         });
-
         break;
 
       case 'En Yeni':
-        products.sort((a, b) => a.date!.compareTo(b.date!));
+        products.sort((a, b) => b.date!.compareTo(a.date!));
         break;
 
       default:
         products.sort((a, b) => a.title.compareTo(b.title));
-
         break;
     }
   }
 
+
   void assignProducts(List<ProductModel> products) {
     this.products.assignAll(products);
-    sortProducts('Name');
+    sortProducts('Ad');
   }
 }

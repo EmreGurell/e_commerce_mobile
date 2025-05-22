@@ -1,3 +1,4 @@
+import 'package:iconsax/iconsax.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +10,9 @@ class SectionHeading extends StatelessWidget {
     required this.title,
     this.buttonTitle,
     this.onPressed,
+    this.buttonColor,
   });
-  final Color? textColor;
+  final Color? textColor, buttonColor;
   final bool showActionButton;
   final String title;
   final String? buttonTitle;
@@ -31,15 +33,23 @@ class SectionHeading extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            TextButton(
+            if (showActionButton)
+              TextButton.icon(
+                iconAlignment: IconAlignment.end,
                 onPressed: onPressed,
-                child: Text(
-                  showActionButton ? buttonTitle! : '',
+                label: Text(
+                  buttonTitle!,
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium!
-                      .apply(color: textColor),
-                ))
+                      .apply(color: buttonColor),
+                ),
+                icon: Icon(
+                  Iconsax.arrow_right_3,
+                  color: buttonColor,
+                  size: ProjectSizes.IconM * .8,
+                ),
+              ),
           ]),
         ],
       ),

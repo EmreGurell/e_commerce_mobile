@@ -31,6 +31,8 @@ class SliderWithDots extends StatelessWidget {
           children: [
             CarouselSlider(
               options: CarouselOptions(
+                autoPlayInterval: const Duration(seconds: 5),
+                padEnds: true,
                 onPageChanged: (index, _) =>
                     controller.updatePageIndicator(index),
                 viewportFraction: 1,
@@ -45,12 +47,11 @@ class SliderWithDots extends StatelessWidget {
                   isNetworkImage: true,
                   width: double.infinity,
                   height: 200,
-                  borderRadius: ProjectSizes.IconL,
+                  borderRadius: ProjectSizes.imageAndCardRadius,
                   fit: BoxFit.cover,
-                  applyImageRadius: true,
+                  applyImageRadius: false,
                   onPressed: () => Get.toNamed(banner.targetScreen),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: ProjectSizes.spaceBtwItems),
+
                 );
               }).toList(),
             ),
@@ -61,12 +62,12 @@ class SliderWithDots extends StatelessWidget {
                 children: List.generate(
                   controller.banners.length,
                   (index) => CircularContainer(
-                    width: 25,
-                    height: 3,
-                    opacity: .8,
+                    width: 30,
+                    height: 4,
+                    opacity: 1,
                     backgroundColor:
                         controller.carouselCurrentIndex.value == index
-                            ? ProjectColors.finance2Color
+                            ? ProjectColors.greenColor
                             : ProjectColors.gray4Color,
                     margin: const EdgeInsets.only(right: ProjectSizes.small),
                   ),

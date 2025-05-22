@@ -11,8 +11,9 @@ class OrderRepository extends GetxController {
   Future<List<OrderModel>> fetchUserOrders() async {
     try {
       final userId = AuthenticationRepository.instance.authUser!.uid;
-      if (userId.isEmpty)
+      if (userId.isEmpty) {
         throw 'Kullanıcı bilgisi bulunamadı. Lütfen birkaç dakika sonra tekrar deneyiniz.';
+      }
 
       final result =
           await _db.collection('Users').doc(userId).collection('Orders').get();
@@ -20,17 +21,27 @@ class OrderRepository extends GetxController {
           .map((documentSnapshot) => OrderModel.fromSnapshot(documentSnapshot))
           .toList();
     } catch (e) {
+      print('$e');
       throw 'Sipariş bilgisi alınırken bir hata oluştu. Lütfen daha sonra tekrar deneyin';
     }
   }
 
   Future<void> saveOrder(OrderModel order, String uid) async {
     try {
-      await _db
+      final userOrderRef = await _db
           .collection('Users')
           .doc(uid)
           .collection('Orders')
           .add(order.toJson());
+
+      // Order ID'yi modeli güncelle (ID olmadan kaydolduğu için)
+      final orderWithId = order.copyWith(id: userOrderRef.id);
+
+      // Merkezi koleksiyona da yaz
+      await _db
+          .collection('Orders')
+          .doc(userOrderRef.id)
+          .set(orderWithId.toJson());
     } catch (e) {
       throw 'Sipariş bilgisi kaydedilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin';
     }

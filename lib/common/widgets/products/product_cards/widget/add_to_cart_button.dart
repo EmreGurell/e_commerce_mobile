@@ -12,44 +12,100 @@ class AddToCartButton extends StatelessWidget {
     super.key,
     required this.product,
   });
+
   final ProductModel product;
+
   @override
   Widget build(BuildContext context) {
     final cartController = CartController.instance;
-    return InkWell(
-      onTap: () {
-        // Sepete ekleme işlemi
-        if (product.productType == ProductType.single.toString()) {
-          final cartItem = cartController.convertToCartItem(product, 1);
-          cartController.addOneCart(cartItem);
-        } else {}
-      },
-      child: Obx(() {
-        final productQuantityInCart =
-            cartController.getProductQuantityInCart(product.id);
-        return Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: productQuantityInCart > 0
-                ? ProjectColors.blueColor
-                : ProjectColors.neutralBlackColor,
-            borderRadius: BorderRadius.circular(ProjectSizes.small),
+
+    return Obx(() {
+      final productQuantityInCart =
+          cartController.getProductQuantityInCart(product.id);
+
+      return Row(
+        children: [
+          // - Butonu
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (child, animation) => SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.5, 0),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            ),
+            child: productQuantityInCart > 0
+                ? InkWell(
+                    key: const ValueKey("minus"),
+                    onTap: () {
+                      if (product.productType ==
+                          ProductType.single.toString()) {
+                        final cartItem =
+                            cartController.convertToCartItem(product, 1);
+                        cartController.removeOneFromCart(cartItem, context);
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: ProjectColors.whiteColor,
+                        borderRadius: BorderRadius.circular(ProjectSizes.small),
+                      ),
+                      child: const Icon(
+                        Iconsax.minus,
+                        color: ProjectColors.neutralBlackColor,
+                        size: 20,
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ),
-          child: productQuantityInCart > 0
-              ? Text(
-                  productQuantityInCart.toString(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .apply(color: ProjectColors.whiteColor),
-                )
-              : const Icon(
-                  Iconsax.add,
-                  color: ProjectColors.whiteColor,
-                  size: 20,
-                ),
-        );
-      }),
-    );
+
+          const SizedBox(width: ProjectSizes.spaceBtwItems / 2),
+
+          // Adet veya + Butonu
+          InkWell(
+            onTap: () {
+              if (product.productType == ProductType.single.toString()) {
+                cartController.addToCart(product);
+              }
+            },
+            child: productQuantityInCart > 0
+                ? Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: ProjectColors.greenColor,
+                      borderRadius: BorderRadius.circular(ProjectSizes.small),
+                    ),
+                    child: SizedBox(
+                      width: 20,
+                      child: Text(
+                        textDirection: TextDirection.ltr,
+                        textAlign: TextAlign.center,
+                        productQuantityInCart.toString(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .apply(color: ProjectColors.whiteColor),
+                      ),
+                    ),
+                  )
+                : Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: ProjectColors.greenColor,
+                      borderRadius: BorderRadius.circular(ProjectSizes.small),
+                    ),
+                    child: const Icon(
+                      Iconsax.add,
+                      color: ProjectColors.whiteColor,
+                      size: 20,
+                    ),
+                  ),
+          ),
+        ],
+      );
+    });
   }
 }

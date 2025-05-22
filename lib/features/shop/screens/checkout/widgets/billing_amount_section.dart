@@ -20,7 +20,7 @@ class BillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Ara Toplam', style: Theme.of(context).textTheme.bodyMedium),
-            Text('\$$subTotal', style: Theme.of(context).textTheme.bodyMedium),
+            Text('$subTotal TL', style: Theme.of(context).textTheme.bodyMedium),
           ],
         ),
         const SizedBox(height: ProjectSizes.spaceBtwItems / 2),
@@ -28,7 +28,8 @@ class BillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Kargo Ücreti', style: Theme.of(context).textTheme.bodyMedium),
-            Text('\$${PricingCalculator.calculateShippingCost(subTotal, 'TR')}',
+            Text(
+                '${PricingCalculator.calculateShippingCost(subTotal, 'TR')} TL',
                 style: Theme.of(context).textTheme.labelLarge),
           ],
         ),
@@ -37,7 +38,7 @@ class BillingAmountSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Vergi Ücreti', style: Theme.of(context).textTheme.bodyMedium),
-            Text('\$${PricingCalculator.calculateTax(subTotal, 'TR')}',
+            Text('${PricingCalculator.calculateTax(subTotal, 'TR')} TL',
                 style: Theme.of(context).textTheme.labelLarge),
           ],
         ),
@@ -47,7 +48,7 @@ class BillingAmountSection extends StatelessWidget {
           children: [
             Text('Sipariş Toplamı',
                 style: Theme.of(context).textTheme.bodyMedium),
-            Text('\$${PricingCalculator.calculateTotalPrice(subTotal, 'TR')}',
+            Text('${PricingCalculator.calculateTotalPrice(subTotal, 'TR')} TL',
                 style: Theme.of(context).textTheme.titleMedium),
           ],
         ),

@@ -1,42 +1,75 @@
-import 'package:tarhanaciyasarmobil/features/shop/models/brand_model.dart';
-import 'package:tarhanaciyasarmobil/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:tarhanaciyasarmobil/common/widgets/images/rounded_image.dart';
+import 'package:tarhanaciyasarmobil/features/shop/controllers/brand_controller.dart';
+import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
+
+import '../../../../../utils/constants/sizes.dart';
+import '../../../models/brand_model.dart';
 
 class BrandCard extends StatelessWidget {
-  final bool showBorder;
   final BrandModel brand;
+  final bool showBorder;
+  final VoidCallback? onTap;
 
-  const BrandCard({Key? key, required this.showBorder, required this.brand})
-      : super(key: key);
+  const BrandCard({
+    super.key,
+    required this.brand,
+    this.showBorder = false,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: showBorder
-          ? RoundedRectangleBorder(
-              side: BorderSide(color: Colors.grey, width: 1),
-              borderRadius: BorderRadius.circular(8),
-            )
-          : null,
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(ProjectSizes.small),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(ProjectSizes.imageAndCardRadius),
+          border:
+              showBorder ? Border.all(color: ProjectColors.greenColor) : null,
+        ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (brand.image.isNotEmpty)
-              Image.network(
-                brand.image,
-                width: 50,
-                height: 50,
-                errorBuilder: (context, error, stackTrace) =>
-                    Icon(Icons.image_not_supported),
-              )
-            else
-              const Icon(Icons.image, size: 50, color: Colors.grey),
+            RoundedImage(
+              applyImageRadius: true,
+              padding: EdgeInsets.all(0),
+              imageUrl: brand.image,
+              isNetworkImage: true,
+              width: 45,
+              height: 45,
+            ),
             const SizedBox(width: ProjectSizes.small),
-            Text(
-              brand.name,
-              style: Theme.of(context).textTheme.displayMedium,
+            // Yazı alanı sığmazsa sarıp küçülsün diye Flexible ekleniyor
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    brand.name.toUpperCase(),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  FutureBuilder<int>(
+                    future: BrandController.instance
+                        .calculateProductCount(brand.id),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text('Yükleniyor...');
+                      } else if (snapshot.hasError) {
+                        return const Text('Hata oluştu');
+                      } else {
+                        return Text('${snapshot.data ?? 0} ürün');
+                      }
+                    },
+                  )
+                ],
+              ),
             ),
           ],
         ),

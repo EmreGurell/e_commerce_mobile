@@ -1,4 +1,3 @@
-import 'package:tarhanaciyasarmobil/common/custom_shapes/containers/circular_container.dart';
 import 'package:tarhanaciyasarmobil/common/custom_shapes/curved_edges/curved_edges_widgets.dart';
 import 'package:tarhanaciyasarmobil/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +13,11 @@ class PrimaryHeaderContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return CurvedEdgesWidget(
       child: Container(
-        color: ProjectColors.purpleColor,
+        color: ProjectColors.greenColor,
         padding: const EdgeInsets.all(0),
         child: Stack(
           children: [
-            const Positioned(
+            /* const Positioned(
               top: -150,
               right: -250,
               child: CircularContainer(
@@ -29,7 +28,7 @@ class PrimaryHeaderContainer extends StatelessWidget {
               top: 0,
               right: 0,
               child: CircularContainer(),
-            ),
+            ),*/
             child,
             // Header için verilen içerik
           ],

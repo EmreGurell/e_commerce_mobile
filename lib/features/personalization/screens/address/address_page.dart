@@ -20,13 +20,17 @@ class UserAddressScreen extends StatelessWidget {
       appBar: MyAppbar(
         title: Text(
           ProjectTexts.myAdresses,
-          style: Theme.of(context).textTheme.headlineMedium,
+          style: Theme.of(context)
+              .textTheme
+              .headlineMedium!
+              .apply(fontFamily: 'Poppins'),
         ),
         showBackArrow: true,
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: ProjectColors.blueColor,
-        onPressed: () => Get.to(const AddNewAddress()),
+        backgroundColor: Theme.of(context).primaryColor,
+        onPressed: () =>
+            Get.to(transition: Transition.rightToLeft, const AddNewAddress()),
         child: const Icon(
           Iconsax.add,
           color: ProjectColors.whiteColor,
@@ -34,7 +38,7 @@ class UserAddressScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(ProjectSizes.pagePadding),
+          padding: const EdgeInsets.all(ProjectSizes.pagePadding),
           child: Column(
             children: [
               Obx(
@@ -54,6 +58,9 @@ class UserAddressScreen extends StatelessWidget {
                           address: addresses[index],
                           onTap: () =>
                               controller.selectAddress(addresses[index]),
+                          onDismissed: (_) {
+                            controller.deleteAddress(addresses[index].id);
+                          },
                         ),
                       );
                     }),
