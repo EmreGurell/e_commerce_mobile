@@ -120,14 +120,15 @@ class HomeScreen extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(
                         horizontal: ProjectSizes.pagePadding),
-                    itemCount: brands.length,
+                    itemCount: brandController.featuredBrands.length,
                     itemBuilder: (context, index) {
                       final brand = brands[index];
                       return SizedBox(
                           width: 200,
                           child: BrandCard(
                               brand: brand,
-                              onTap: () => BrandProducts(brand: brand)));
+                              onTap: () =>
+                                  Get.to(BrandProducts(brand: brand))));
                     },
                   );
                 }),

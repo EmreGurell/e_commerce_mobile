@@ -21,7 +21,7 @@ class OnboardingNextBtn extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
               backgroundColor:
-                  isDark ? ProjectColors.blueColor : ProjectColors.financeColor,
+                  isDark ? ProjectColors.greenColor : ProjectColors.greenColor,
             ),
             onPressed: () => OnboardingController.instance.nextPage(),
             child: const Icon(Iconsax.arrow_right_3)));

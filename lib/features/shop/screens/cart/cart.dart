@@ -18,8 +18,11 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       appBar: MyAppbar(
         showBackArrow: true,
-        title:
-            Text('Sepetim', style: Theme.of(context).textTheme.headlineMedium),
+        title: Text('Sepetim',
+            style: Theme.of(context)
+                .textTheme
+                .headlineMedium!
+                .apply(fontFamily: 'Poppins')),
       ),
       body: Obx(() {
         final emptyWidget = AnimationLoaderWidget(

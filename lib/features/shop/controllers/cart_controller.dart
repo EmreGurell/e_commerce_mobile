@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:tarhanaciyasarmobil/common/widgets/dialogs/dialogs.dart';
@@ -22,16 +23,76 @@ class CartController extends GetxController {
   CartController() {
     loadCartItems();
   }
-  void addOneCart(CartItemModel item) {
+  Future<void> addOneCart(CartItemModel item) async {
+    // Firestore'dan ürünü çek
+    final productSnapshot = await FirebaseFirestore.instance
+        .collection('Products')
+        .doc(item.productId)
+        .get();
+
+    if (!productSnapshot.exists) {
+      Loaders.warningSnackBar(
+        title: 'Ürün bulunamadı',
+        message: 'Bu ürün veritabanında mevcut değil.',
+      );
+      return;
+    }
+
+    final productData = productSnapshot.data()!;
+    final isVariable =
+        productData['productType'] == ProductType.variable.toString();
+
+    int availableStock;
+
+    if (isVariable &&
+        item.variationId != null &&
+        item.variationId!.isNotEmpty) {
+      // Varyasyonlu ürün: ilgili varyasyonu bul
+      final variations = productData['variations'] as List<dynamic>;
+      final selectedVariation = variations.firstWhere(
+        (v) => v['id'] == item.variationId,
+        orElse: () => null,
+      );
+
+      if (selectedVariation == null) {
+        Loaders.warningSnackBar(
+          title: 'Varyasyon bulunamadı',
+          message: 'Bu ürün varyasyonu veritabanında mevcut değil.',
+        );
+        return;
+      }
+
+      availableStock = selectedVariation['stock'] ?? 0;
+    } else {
+      // Düz ürün
+      availableStock = productData['stock'] ?? 0;
+    }
+
     int index = cartItems.indexWhere((cartItem) =>
         cartItem.productId == item.productId &&
         cartItem.variationId == item.variationId);
 
     if (index >= 0) {
+      int currentQuantity = cartItems[index].quantity;
+      if (currentQuantity + 1 > availableStock) {
+        Loaders.warningSnackBar(
+          title: 'Yetersiz Stok',
+          message: 'Bu ürün için stok sınırına ulaşıldı.',
+        );
+        return;
+      }
       cartItems[index].quantity += 1;
     } else {
+      if (item.quantity > availableStock) {
+        Loaders.warningSnackBar(
+          title: 'Yetersiz Stok',
+          message: 'Bu ürünü sepete eklemek için yeterli stok bulunmuyor.',
+        );
+        return;
+      }
       cartItems.add(item);
     }
+
     updateCart();
   }
 
@@ -54,6 +115,7 @@ class CartController extends GetxController {
   }
 
   void addToCart(ProductModel product) {
+    productQuantityInCart = 1.obs;
     if (productQuantityInCart.value < 1) {
       Loaders.customToast(message: 'Adet seçiniz');
       return;

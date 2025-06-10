@@ -15,6 +15,7 @@ class BrandProducts extends StatelessWidget {
     final controller = BrandController.instance;
     return Scaffold(
       appBar: MyAppbar(
+          showBackArrow: true,
           title: Text(brand.name,
               style: Theme.of(context)
                   .textTheme
@@ -22,10 +23,10 @@ class BrandProducts extends StatelessWidget {
                   .apply(fontFamily: 'Poppins'))),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(ProjectSizes.pagePadding),
+          padding: const EdgeInsets.all(ProjectSizes.pagePadding),
           child: Column(
             children: [
-              SizedBox(height: ProjectSizes.spaceBtwItems * 2),
+              const SizedBox(height: ProjectSizes.spaceBtwItems * 2),
               FutureBuilder(
                   future: controller.getBrandProducts(brandId: brand.id),
                   builder: (context, snapshot) {

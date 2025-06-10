@@ -25,7 +25,7 @@ class ProductQuantity extends StatelessWidget {
         ? Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const SizedBox(width: 100),
+              const SizedBox(width: 20),
               // Add Remove Buttons
               Container(
                 width: width,

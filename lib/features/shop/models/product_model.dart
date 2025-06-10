@@ -170,20 +170,25 @@ extension ProductModelExtensions on ProductModel {
     if (productType == ProductType.variable.toString() &&
         productVariations != null &&
         productVariations!.isNotEmpty) {
-      final prices = productVariations!
+      // Geçerli fiyatları ve stoğu olan varyasyonları filtrele
+      final validVariations = productVariations!
+          .where((v) =>
+              (v.salePrice > 0 || v.price > 0) && v.stock > 0) // stok kontrolü
           .map<Map<String, double>>((v) => {
-                'price': v.price.toDouble(),
-                'salePrice': v.salePrice > 0 ? v.salePrice.toDouble() : 0.0,
+                'price': v.price,
+                'salePrice': v.salePrice > 0 ? v.salePrice : 0.0,
               })
           .toList();
 
-      prices.sort((a, b) {
+      if (validVariations.isEmpty) return null;
+
+      validVariations.sort((a, b) {
         final aPrice = a['salePrice']! > 0 ? a['salePrice']! : a['price']!;
         final bPrice = b['salePrice']! > 0 ? b['salePrice']! : b['price']!;
         return aPrice.compareTo(bPrice);
       });
 
-      return prices.first;
+      return validVariations.first;
     }
 
     return null;

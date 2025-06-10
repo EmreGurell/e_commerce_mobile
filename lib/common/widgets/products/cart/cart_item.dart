@@ -25,7 +25,7 @@ class CartItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isDark = HelperFuctions.isDarkMode(context);
     return Container(
-      padding: EdgeInsets.all(ProjectSizes.small / 2),
+      padding: const EdgeInsets.all(ProjectSizes.small / 2),
       decoration: BoxDecoration(
           boxShadow: [ProjectBoxShadow.lowCardShadow],
           color: ProjectColors.whiteColor,
@@ -49,22 +49,29 @@ class CartItem extends StatelessWidget {
             children: [
               //Marka eklenebilir.
               Flexible(
-                  child: ProductTitleText(
-                      title: cartItem.title, maxLines: 1, smallSize: false)),
+                  child: Text(
+                cartItem.title.toUpperCase(),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontFamily: 'Poppins'),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              )),
               Text.rich(TextSpan(
                 children: (cartItem.selectedVariation ?? {})
                     .entries
                     .map((e) => TextSpan(children: [
                           TextSpan(
-                              text: '${e.key},',
+                              text: '${e.key}: ',
                               style: Theme.of(context).textTheme.bodySmall),
                           TextSpan(
                               text: '${e.value}',
-                              style: Theme.of(context).textTheme.bodyLarge),
+                              style: Theme.of(context).textTheme.bodySmall),
                         ]))
                     .toList(),
               )),
-              SizedBox(
+              const SizedBox(
                 height: ProjectSizes.spaceBtwItems,
               ),
               ProductPriceText(
@@ -82,7 +89,9 @@ class CartItem extends StatelessWidget {
         if (showAddRemoveButtons)
           ProductQuantity(
             quantity: cartItem.quantity,
-            add: () => CartController.instance.addOneCart(cartItem),
+            add: () => CartController.instance.addOneCart(
+              cartItem,
+            ),
             remove: () =>
                 CartController.instance.removeOneFromCart(cartItem, context),
           )

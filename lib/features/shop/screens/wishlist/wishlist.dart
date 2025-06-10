@@ -26,7 +26,10 @@ class Wishlist extends StatelessWidget {
         centerTitle: false,
         title: Text(
           ProjectTexts.wishlist,
-          style: Theme.of(context).textTheme.headlineMedium,
+          style: Theme.of(context)
+              .textTheme
+              .headlineMedium!
+              .apply(fontFamily: 'Poppins'),
         ),
         actions: [
           CircularIcon(

@@ -29,7 +29,7 @@ class OnboardingPageIndicator extends StatelessWidget {
           onDotClicked: controller.dotNavigationClick,
           effect: ExpandingDotsEffect(
               activeDotColor:
-                  isDark ? ProjectColors.blueColor : ProjectColors.financeColor,
+                  isDark ? ProjectColors.greenColor : ProjectColors.greenColor,
               dotHeight: 4),
         ),
       ),

@@ -36,7 +36,7 @@ class BrandCard extends StatelessWidget {
           children: [
             RoundedImage(
               applyImageRadius: true,
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               imageUrl: brand.image,
               isNetworkImage: true,
               width: 45,

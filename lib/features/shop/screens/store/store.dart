@@ -5,6 +5,7 @@ import 'package:tarhanaciyasarmobil/features/shop/controllers/brand_controller.d
 import 'package:tarhanaciyasarmobil/features/shop/controllers/category_controller.dart';
 import 'package:tarhanaciyasarmobil/features/shop/controllers/search_controller.dart';
 import 'package:tarhanaciyasarmobil/features/shop/screens/all_categories/category_products.dart';
+import 'package:tarhanaciyasarmobil/features/shop/screens/brands/brand_products.dart';
 import 'package:tarhanaciyasarmobil/features/shop/screens/brands/widgets/brand_card.dart';
 import 'package:tarhanaciyasarmobil/features/shop/screens/store/widgets/store_appbar.dart';
 
@@ -62,7 +63,11 @@ class Store extends StatelessWidget {
                   return SizedBox(
                     height: 75,
                     width: 150,
-                    child: BrandCard(brand: brand, showBorder: false),
+                    child: BrandCard(
+                      brand: brand,
+                      showBorder: false,
+                      onTap: () => Get.to(() => BrandProducts(brand: brand)),
+                    ),
                   );
                 }).toList(),
               ),

@@ -25,6 +25,7 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               children: [
                 MyAppbar(
+                  backIconColor: ProjectColors.whiteColor,
                   title: Text(
                     'Profilim',
                     style: Theme.of(context)
@@ -115,16 +116,6 @@ class ProfileScreen extends StatelessWidget {
                 ProfileMenu(
                   title: "Telefon Numarası",
                   value: controller.user.value.formattedPhoneNumber,
-                  onTap: () {},
-                ),
-                ProfileMenu(
-                  title: "Cinsiyet",
-                  value: "Erkek",
-                  onTap: () {},
-                ),
-                ProfileMenu(
-                  title: "Doğum Tarihi",
-                  value: "24-10-2005",
                   onTap: () {},
                 ),
                 const Divider(
